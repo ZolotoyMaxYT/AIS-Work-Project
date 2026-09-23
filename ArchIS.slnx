@@ -1,6 +1,6 @@
 <Solution>
-  <Project Path="../ConsoleApp/ConsoleApp.csproj" Id="eba8ff36-ac76-46f0-aa76-fc7ee01a751a" />
-  <Project Path="../DekstopApp/DekstopApp.csproj" Id="c8f7cd48-c3cb-45ca-8ca9-60ccc307d097" />
-  <Project Path="../Entity/Entity.csproj" Id="0254a8e6-86a4-418a-b003-0b6454d2ed15" />
-  <Project Path="BussinesLogic.csproj" />
+  <Project Path="BussinesLogic/BussinesLogic.csproj" />
+  <Project Path="ConsoleApp/ConsoleApp.csproj" />
+  <Project Path="DekstopApp/DekstopApp.csproj" />
+  <Project Path="Entity/Entity.csproj" />
 </Solution>

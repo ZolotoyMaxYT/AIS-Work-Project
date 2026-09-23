@@ -1,8 +1,7 @@
 ﻿using Entity;
 
-namespace ArchIS
+namespace BussinesLogic
 {
-
     public enum IsExistResult
     {
         IsExist,
@@ -36,7 +35,8 @@ namespace ArchIS
         public int IndexOf(string id)
         {
             var count = Database.Count;
-            for (int i = 0; i < count; i++) {
+            for (int i = 0; i < count; i++)
+            {
                 if (Database[i].Id == id)
                 {
                     return i;
@@ -116,14 +116,14 @@ namespace ArchIS
         /// <returns></returns>
         public IsNotExistResult Update(string id, string? name = null, string? description = null, string? author = null, ModVersion? version = null, int? rank = null, List<string>? modPacks = null)
         {
-            if (Read(id, out MinecraftMod mod) == IsNotExistResult.Successful) 
+            if (Read(id, out MinecraftMod mod) == IsNotExistResult.Successful)
             {
-                mod.Name        = name          ?? mod.Name;
-                mod.Description = description   ?? mod.Description;
-                mod.Author      = author        ?? mod.Author;
-                mod.Version     = version       ?? mod.Version;
-                mod.Rank        = rank          ?? mod.Rank;
-                mod.ModPacks    = modPacks      ?? mod.ModPacks;
+                mod.Name = name ?? mod.Name;
+                mod.Description = description ?? mod.Description;
+                mod.Author = author ?? mod.Author;
+                mod.Version = version ?? mod.Version;
+                mod.Rank = rank ?? mod.Rank;
+                mod.ModPacks = modPacks ?? mod.ModPacks;
                 return IsNotExistResult.Successful;
             }
             return IsNotExistResult.IsNotExist;
@@ -153,7 +153,7 @@ namespace ArchIS
         {
             if (Read(id, out MinecraftMod mod) == IsNotExistResult.Successful)
             {
-                if (mod.ModPacks.Remove(modPack)) return NotInModPackResult.Successful; 
+                if (mod.ModPacks.Remove(modPack)) return NotInModPackResult.Successful;
                 return NotInModPackResult.NotInModPack;
             }
             return NotInModPackResult.IsNotExist;
@@ -173,3 +173,4 @@ namespace ArchIS
         #endregion // DatabaseWork
     }
 }
+
