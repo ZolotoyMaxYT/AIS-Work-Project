@@ -1,20 +1,31 @@
-# Архитектура ИС
+# АИС
 
-### Термины
- * Сущность: `class MinecraftMod`; <br>
- * База данных: `List<MinecraftMod>`; <br>
- * ID сущности: `string MinecraftMod.Id`; <br>
- * Данные: `Dictionary<string, object>`;
+## Основное
+Все бизнес-функции возвращают статус результата работы, обычно это "удачно" (`Successful`) и "неудачно" (всё остальное)
  * Результаты бизнес-функций:
-	* `CreateResult` : `NoCorrectData`, `IsExist`, `Successful`;
-	* `DeleteResult` : `IsNotExist`, `Successful`;
-	* `UpdateResult` : `NoCorrectData`, `IsNotExist`, `Successful`;
-	* `SetPublicOrPrivateResult` : `IsNotExist`, `NoChanged`, `Successful`.
+	* enum `IsExistResult` :
+		* `IsExist` - Мод уже существует, 
+		* `Successful` - Функция успешно выполнена;
+	* enum `IsNotExistResult` :
+		* `IsNotExist` - Мод/сборка не существует, 
+		* `Successful` - Функция успешно выполнена;
+	* enum `InModPackResult` : 
+		* `IsNotExist` - Мод не существует, 
+		* `InModPack` - Мод уже в сборке,
+		* `Successful` - Функция успешно выполнена;
+	* enum `NotInModPackResult` :
+		* `IsNotExist` - Мод не существует, 
+		* `NotInModPack` - Мода нет в сборке,
+		* `Successful` - Функция успешно выполнена.
 
-### Доступные функции:
- * Создать `[CreateResult] Logic.Create(база данных, сущность)`;
- * Удалить `[DeleteResult] Logic.Delete(база данных, ID сущности)`;
- * Получить данные `[Данные сущности или null] Logic.Read(база данных, ID сущности)`;
- * Обновить данные `[UpdateResult] Logic.Update(база данных, ID сущности, новые данные сущности)`;
- * Сделать публичным `[SetPublicOrPrivateResult] SetPublic(база данных, ID сущности)`;
- * Сделать приватным `[SetPublicOrPrivateResult] SetPrivate(база данных, ID сущности)`.
+---
+
+## Доступные функции:
+ * Создать: `[IsExistResult] Logic.Create(...данные)`;
+ * Удалить: `[IsNotExistResult] Logic.Delete(ID сущности)`;
+ * Прочитать: `[IsNotExistResult] Logic.Read(ID сущности, out [МОД])`;
+ * Обновить: `[IsNotExistResult] Logic.Update(ID сущности, ...новые данные)`;
+ * Проверить, входит ли мод в сборку: `[IsNotExistResult] InModPack(ID сущности, сборка, out [В СБОРКЕ ИЛИ НЕТ])`;
+ * Добавить мод в сборку: `[InModPackResult] AddToModPack(ID сущности, сборка)`;
+ * Удалить мод из сборки: `[NotInModPackResult] RemoveFromModPack(ID сущности, сборка)`;
+ * Получить все моды из сборки: `[IsNotExistResult] GetAllModsFromModPack(сборка, out [СПИСОК МОДОВ])`.
