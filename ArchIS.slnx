@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Элементы решения/">
+    <File Path="README.md" />
+  </Folder>
   <Project Path="BussinesLogic/BussinesLogic.csproj" />
   <Project Path="ConsoleApp/ConsoleApp.csproj" />
   <Project Path="DekstopApp/DekstopApp.csproj" />

@@ -5,21 +5,7 @@ using Entity;
 ConsoleMenu menu = new(["list of mods", "create", "read", "delete", "update", "add to modpack", "delete from modpack", "all mods from modpack"]);
 ModDatabase db = new ModDatabase();
 
-string InputExistID()
-{
-    Console.WriteLine(" ---[ (string) ID ]---");
-    string id;
-    while (true)
-    {
-        id = ConsoleUtils.InputString();
-        if (db.Has(id)) break;
-        ConsoleUtils.Warn($"Mod with id \"{id}\" is not exist!");
-    }
-    Console.ForegroundColor = ConsoleColor.White;
-    Console.WriteLine(" ---------------------\n");
-    return id;
-}
-string InputExistIDOrNull()
+string InputExistIDOrEmptyString()
 {
     Console.WriteLine(" ---[ (string) ID or empty string ]---");
     string id;
@@ -93,7 +79,7 @@ while (true)
                 {
                     ConsoleUtils.Print(db.ListOfMods());
                     Console.WriteLine();
-                    string id = InputExistIDOrNull();
+                    string id = InputExistIDOrEmptyString();
                     if (id != "")
                     {
                         db.Read(id, out var mod);
@@ -105,7 +91,7 @@ while (true)
                 break;
             case 3: // delete
                 {
-                    string id = InputExistIDOrNull();
+                    string id = InputExistIDOrEmptyString();
                     if (id != "")
                     {
                         db.Delete(id);
@@ -118,7 +104,7 @@ while (true)
                 break;
             case 4: // update
                 {
-                    string id = InputExistIDOrNull();
+                    string id = InputExistIDOrEmptyString();
                     if (id != "")
                     {
                         db.Read(id, out var mod);
@@ -155,7 +141,7 @@ while (true)
                 break;
             case 5: // add to modpack
                 {
-                    string id = InputExistIDOrNull();
+                    string id = InputExistIDOrEmptyString();
                     if (id != "")
                     {
                         Console.WriteLine(" ---[ (string) MOD PACK ]---");
@@ -177,7 +163,7 @@ while (true)
                 break;
             case 6: // delete from modpack
                 {
-                    string id = InputExistIDOrNull();
+                    string id = InputExistIDOrEmptyString();
                     if (id != "")
                     {
                         Console.WriteLine(" ---[ (string) MOD PACK ]---");
