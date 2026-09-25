@@ -34,7 +34,7 @@
         /// Get index of mod
         /// </summary>
         /// <returns>index of mod or -1 if mod is not exist</returns>
-        public int IndexOf(string id)
+        private int IndexOf(string id)
         {
             var count = Database.Count;
             for (int i = 0; i < count; i++)
