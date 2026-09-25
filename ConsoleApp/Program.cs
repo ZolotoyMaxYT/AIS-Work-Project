@@ -1,9 +1,13 @@
 ﻿using BussinesLogic;
 using ConsoleApp;
-using Entity;
 
 ConsoleMenu menu = new(["list of mods", "create", "read", "delete", "update", "add to modpack", "delete from modpack", "all mods from modpack"]);
 ModDatabase db = new ModDatabase();
+
+db.Create("ExempleMod", "Exemple mod", "This is a exemple mod with open source code.\nYou can download and use my code for your mods.\nBy Mr. Coder", "Mr. Coder", new(TypeVersion.Release, 1, 0, 0), true, 99, ["mr. coder", "coder", "open source"]);
+db.Create("AnotherMod", "Another mod", "This is a another mod.\nYou can download my mod but you can't use my code for your project.\nBy Mr. Coder", "Mr. Coder", new(TypeVersion.Alpha, 2, 25, 484), true, 68, ["mr. coder", "coder"]);
+db.Create("SmallMod", "Very Small Mod", "This is my first mod!\nPlease play and enjoy!", "Ms. Coder", new(TypeVersion.Beta, 1, 8, 13), true, 84, ["ms. coder", "coder"]);
+db.Create("BadMod", "Not a Mod", "", "AAA", new(TypeVersion.Alpha, 25, 25, 25), false, -46, []);
 
 string InputExistIDOrEmptyString()
 {

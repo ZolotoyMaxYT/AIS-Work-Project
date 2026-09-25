@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
+using BussinesLogic;
 
 namespace DekstopApp
 {
@@ -21,7 +17,7 @@ namespace DekstopApp
 
         private void CreateButton_Click(object sender, EventArgs e)
         {
-            switch (Mainform.Database.Create(IDInput.Text, NameInput.Text, DescriptionInput.Text.Replace(Environment.NewLine, "\n"), AuthorInput.Text, new((Entity.TypeVersion)VersionTypeInput.SelectedIndex, (int)VersionAInput.Value, (int)VersionBInput.Value, (int)VersionCInput.Value), IsJavaInput.SelectedIndex == 0, (int)RankInput.Value, ModpackInput.Text.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).ToList()))
+            switch (Mainform.Database.Create(IDInput.Text, NameInput.Text, DescriptionInput.Text.Replace(Environment.NewLine, "\n"), AuthorInput.Text, new((TypeVersion)VersionTypeInput.SelectedIndex, (int)VersionAInput.Value, (int)VersionBInput.Value, (int)VersionCInput.Value), IsJavaInput.SelectedIndex == 0, (int)RankInput.Value, ModpackInput.Text.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).ToList()))
             {
                 case BussinesLogic.IsExistResult.NotID:
                     MessageBox.Show(null, $"Incorrect id \"{IDInput.Text}\"!", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);

@@ -1,6 +1,4 @@
-﻿using Entity;
-
-namespace BussinesLogic
+﻿namespace BussinesLogic
 {
     public enum IsExistResult
     {

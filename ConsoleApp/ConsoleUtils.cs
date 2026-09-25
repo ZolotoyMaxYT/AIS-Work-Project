@@ -1,5 +1,5 @@
-﻿using Entity;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
+using BussinesLogic;
 
 namespace ConsoleApp
 {

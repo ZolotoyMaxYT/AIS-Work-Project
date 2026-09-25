@@ -5,5 +5,4 @@
   <Project Path="BussinesLogic/BussinesLogic.csproj" />
   <Project Path="ConsoleApp/ConsoleApp.csproj" />
   <Project Path="DekstopApp/DekstopApp.csproj" />
-  <Project Path="Entity/Entity.csproj" />
 </Solution>
