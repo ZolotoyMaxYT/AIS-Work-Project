@@ -6,35 +6,37 @@ namespace DekstopApp
 {
     public partial class EditModForm : Form
     {
-        MinecraftMod Mod;
-        public EditModForm(MinecraftMod mod)
+        MainForm Mainform;
+        string Mod;
+        public EditModForm(MainForm mainform, string mod)
         {
             InitializeComponent();
+            Mainform = mainform;
             Mod = mod;
-            IDText.Text = Mod.Id;
-            NameInput.Text = Mod.Name;
-            AuthorInput.Text = Mod.Author;
-            DescriptionInput.Text = Mod.Description.Replace("\n", Environment.NewLine);
-            VersionAInput.Value = Mod.Version.A;
-            VersionBInput.Value = Mod.Version.B;
-            VersionCInput.Value = Mod.Version.C;
-            VersionTypeInput.SelectedIndex = (int)Mod.Version.Type;
-            TypeText.Text = Mod.IsJavaMod ? "Java mod" : "Bedrock mod";
-            RankInput.Value = Mod.Rank;
-            ModpackInput.Text = String.Join(Environment.NewLine, Mod.ModPacks);
+            Mainform.Database.Read(Mod, out var data);
+            IDText.Text = (string)data["Id"];
+            NameInput.Text = (string)data["Name"];
+            AuthorInput.Text = (string)data["Author"];
+            DescriptionInput.Text = ((string)data["Description"]).Replace("\n", Environment.NewLine);
+            VersionAInput.Value = ((ModVersion)data["Version"]).A;
+            VersionBInput.Value = ((ModVersion)data["Version"]).B;
+            VersionCInput.Value = ((ModVersion)data["Version"]).C;
+            VersionTypeInput.SelectedIndex = (int)((ModVersion)data["Version"]).Type;
+            TypeText.Text = (bool)data["IsJavaMod"] ? "Java mod" : "Bedrock mod";
+            RankInput.Value = (int)data["Rank"];
+            ModpackInput.Text = String.Join(Environment.NewLine, (List<string>)data["ModPacks"]);
         }
 
         private void UpdateButton_Click(object sender, EventArgs e)
         {
-            Mod.Name = NameInput.Text;
-            Mod.Author = AuthorInput.Text;
-            Mod.Description = DescriptionInput.Text.Replace(Environment.NewLine, "\n");
-            Mod.Version.A = (int)VersionAInput.Value;
-            Mod.Version.B = (int)VersionBInput.Value;
-            Mod.Version.C = (int)VersionCInput.Value;
-            Mod.Version.Type = (TypeVersion)VersionTypeInput.SelectedIndex;
-            Mod.Rank = (int)RankInput.Value; 
-            Mod.ModPacks = ModpackInput.Text.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).ToList();
+            if (VersionTypeInput.SelectedIndex == -1)
+            {
+                MessageBox.Show(null, $"Incorrect mod version type \"{VersionTypeInput.Text}\"!", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            Mainform.Database.Update(Mod, NameInput.Text, DescriptionInput.Text.Replace(Environment.NewLine, "\n"), AuthorInput.Text,
+                new((TypeVersion)VersionTypeInput.SelectedIndex, (int)VersionAInput.Value, (int)VersionBInput.Value, (int)VersionCInput.Value),
+                (int)RankInput.Value, ModpackInput.Text.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).ToList());
             Close();
         }
     }

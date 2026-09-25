@@ -49,18 +49,22 @@ while (true)
         {
             case 0: // list of mods
                 {
-                    ConsoleUtils.Print(db.ListOfMods());
+                    ConsoleUtils.PrintMods(db, db.ListOfIDMods());
                     Console.Write("\n - Press Enter to continue... ");
                     Console.ReadLine();
                 }
                 break;
             case 1: // create
                 {
-                    Console.WriteLine(" ---[ (string) ID ]---");
+                    Console.WriteLine(" ---[ (string) ID or empty string ]---");
                     string id;
                     while (true)
                     {
                         id = ConsoleUtils.InputString();
+                        if (id == "")
+                        {
+                            break;
+                        }
                         if (!db.IsCorrectID(id))
                         {
                             ConsoleUtils.Warn($"Incorrect id \"{id}\"!");
@@ -71,6 +75,13 @@ while (true)
                             ConsoleUtils.Warn($"Mod with id \"{id}\" is exist!");
                             continue;
                         }
+                        break;
+                    }
+                    if (id == "")
+                    {
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.Write("\n - Press Enter to continue... ");
+                        Console.ReadLine();
                         break;
                     }
                     Console.ForegroundColor = ConsoleColor.White;
@@ -103,13 +114,13 @@ while (true)
                 break;
             case 2: // read
                 {
-                    ConsoleUtils.Print(db.ListOfMods());
+                    ConsoleUtils.PrintMods(db, db.ListOfIDMods());
                     Console.WriteLine();
                     string id = InputExistIDOrEmptyString();
                     if (id != "")
                     {
                         db.Read(id, out var mod);
-                        ConsoleUtils.Print(mod);
+                        ConsoleUtils.PrintMod(mod);
                     }
                     Console.Write("\n - Press Enter to continue... ");
                     Console.ReadLine();
@@ -134,7 +145,7 @@ while (true)
                     if (id != "")
                     {
                         db.Read(id, out var mod);
-                        ConsoleUtils.Print(mod);
+                        ConsoleUtils.PrintMod(mod);
                         Console.ForegroundColor = ConsoleColor.White;
                         Console.WriteLine(" ---[ (string) NAME or empty space ]---");
                         var name = ConsoleUtils.InputStringOrNull();
@@ -219,7 +230,7 @@ while (true)
                             ConsoleUtils.Warn("This modpack is not exist!");
                             break;
                         case IsNotExistResult.Successful:
-                            ConsoleUtils.Print(mods);
+                            ConsoleUtils.PrintMods(db, mods);
                             break;
                     }
                     Console.ForegroundColor = ConsoleColor.White;

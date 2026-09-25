@@ -100,24 +100,24 @@ namespace ConsoleApp
             }
         }
 
-        public static void Print(MinecraftMod mod)
+        public static void PrintMod(Dictionary<string, object> mod)
         {
             Console.WriteLine( "+---------------------");
-            Console.WriteLine($"| [{mod.Id}] {mod.Name}");
+            Console.WriteLine($"| [{mod["Id"]}] {mod["Name"]}");
             Console.WriteLine( "+-+-------------------");
-            Print(mod.Description);
+            Print((string)mod["Description"]);
             Console.WriteLine( "+-+-------------------");
-            Console.WriteLine($"|-[Author]: {mod.Author}");
-            Console.WriteLine($"|-[Version]: {mod.Version}");
-            Console.WriteLine($"|-[Type]: {GetString(mod.IsJavaMod, "Java mod", "Bedrock mod")}");
-            Console.WriteLine($"|-[Rank]: {mod.Rank}");
+            Console.WriteLine($"|-[Author]: {mod["Author"]}");
+            Console.WriteLine($"|-[Version]: {mod["Version"]}");
+            Console.WriteLine($"|-[Type]: {GetString((bool)mod["IsJavaMod"], "Java mod", "Bedrock mod")}");
+            Console.WriteLine($"|-[Rank]: {mod["Rank"]}");
             Console.WriteLine( "+-+-------------------");
             Console.WriteLine( "| ModPacks");
             Console.WriteLine( "+-+-------------------");
-            Print(mod.ModPacks);
+            Print((List<string>)mod["ModPacks"]);
             Console.WriteLine($"+---------------------");
         }
-        public static void Print(MinecraftMod[] mods)
+        public static void PrintMods(ModDatabase db, string[] mods)
         {
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("---[ LIST OF MODS ]---");
@@ -129,7 +129,10 @@ namespace ConsoleApp
             {
                 for (int i = 0; i < mods.Length; i++)
                 {
-                    Console.WriteLine($" * {mods[i]}");
+                    if (db.ToString(mods[i], out string result) == IsNotExistResult.Successful)
+                    {
+                        Console.WriteLine($" * {result}");
+                    }
                 }
             }
             Console.WriteLine("----------------------");

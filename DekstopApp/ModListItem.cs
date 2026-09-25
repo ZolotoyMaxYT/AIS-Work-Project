@@ -6,15 +6,17 @@ namespace DekstopApp
 {
     public partial class ModListItem : UserControl
     {
-        MinecraftMod Mod;
+        string Mod;
         MainForm Mainform;
-        public ModListItem(MainForm mainform, MinecraftMod mod)
+        public ModListItem(MainForm mainform, string mod)
         {
             InitializeComponent();
             Mod = mod;
             Mainform = mainform;
-            Title.Text = mod.ToString();
-            Modpacks.Text = String.Join(", ", mod.ModPacks);
+            Mainform.Database.ToString(mod, out string result);
+            Title.Text = result;
+            Mainform.Database.GetModPacks(mod, out string[] modpacks);
+            Modpacks.Text = String.Join(", ", modpacks);
         }
         public ModListItem()
         {
@@ -30,7 +32,7 @@ namespace DekstopApp
 
         private void DeleteButton_Click(object sender, EventArgs e)
         {
-            Mainform.Database.Delete(Mod.Id);
+            Mainform.Database.Delete(Mod);
             Mainform.MenuUpdate();
         }
 

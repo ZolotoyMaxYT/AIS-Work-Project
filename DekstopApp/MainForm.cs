@@ -28,7 +28,7 @@ namespace DekstopApp
             Database.Create("VeryBadMod", "Very bad mod!", 
                 "DON'T DOWNLOAD THIS MOD!!!!\nIT DESTROY YOUR MINECRAFT!!!\nNEW 2.1.0 VERSION!!!!", 
                 "Mr. Virus", 
-                new(TypeVersion.Alpha, 2, 1, 0), true, -5261, []);
+                new(TypeVersion.Alpha, 2, 1, 0), false, -5261, []);
             MenuUpdate();
             ModList_SizeChange(null, new());
             SizeChanged += ModList_SizeChange;
@@ -38,7 +38,7 @@ namespace DekstopApp
         {
             ModList.Controls.Clear();
             ModList.Controls.Add(hiddenLabel);
-            foreach (var item in Database.ListOfMods())
+            foreach (var item in Database.ListOfIDMods())
             {
                 var a = new ModListItem(this, item)
                 {

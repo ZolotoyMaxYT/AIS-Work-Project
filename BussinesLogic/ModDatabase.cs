@@ -68,9 +68,24 @@
         /// Get list of mods
         /// </summary>
         /// <returns>list of mods</returns>
-        public MinecraftMod[] ListOfMods()
+        private MinecraftMod[] ListOfMods()
         {
             return (from mod in Database select mod).ToArray();
+        }
+
+
+        /// <summary>
+        /// Read mod from database
+        /// </summary>
+        /// <returns></returns>
+        private IsNotExistResult GetMod(string id, out MinecraftMod mod)
+        {
+            mod = null;
+            if (!IsCorrectID(id)) return IsNotExistResult.NotID;
+            int find = IndexOf(id);
+            if (find == -1) return IsNotExistResult.IsNotExist;
+            mod = Database[find];
+            return IsNotExistResult.Successful;
         }
 
         public bool IsCorrectID(string id)
@@ -80,6 +95,16 @@
         #endregion // Base
 
         #region DatabaseWork
+
+        public IsNotExistResult ToString(string id, out string result)
+        {
+            result = "EMPTY";
+            if (!IsCorrectID(id)) return IsNotExistResult.NotID;
+            int find = IndexOf(id);
+            if (find == -1) return IsNotExistResult.IsNotExist;
+            result = Database[find].ToString();
+            return IsNotExistResult.Successful;
+        }
 
         /// <summary>
         /// Create new mod in database
@@ -110,13 +135,13 @@
         /// Read mod from database
         /// </summary>
         /// <returns></returns>
-        public IsNotExistResult Read(string id, out MinecraftMod mod)
+        public IsNotExistResult Read(string id, out Dictionary<string, object> mod)
         {
             mod = null;
             if (!IsCorrectID(id)) return IsNotExistResult.NotID;
             int find = IndexOf(id);
             if (find == -1) return IsNotExistResult.IsNotExist;
-            mod = Database[find];
+            mod = Database[find].ToJSON();
             return IsNotExistResult.Successful;
         }
 
@@ -127,7 +152,7 @@
         public IsNotExistResult Update(string id, string? name = null, string? description = null, string? author = null, ModVersion? version = null, int? rank = null, List<string>? modPacks = null)
         {
             if (!IsCorrectID(id)) return IsNotExistResult.NotID;
-            if (Read(id, out MinecraftMod mod) == IsNotExistResult.Successful)
+            if (GetMod(id, out MinecraftMod mod) == IsNotExistResult.Successful)
             {
                 mod.Name = name ?? mod.Name;
                 mod.Description = description ?? mod.Description;
@@ -144,7 +169,7 @@
         {
             result = false;
             if (!IsCorrectID(id)) return IsNotExistResult.NotID;
-            if (Read(id, out MinecraftMod mod) == IsNotExistResult.Successful)
+            if (GetMod(id, out MinecraftMod mod) == IsNotExistResult.Successful)
             {
                 if (mod.ModPacks.IndexOf(modPack) != -1) result = true;
                 return IsNotExistResult.Successful;
@@ -154,7 +179,7 @@
         public InModPackResult AddToModPack(string id, string modPack)
         {
             if (!IsCorrectID(id)) return InModPackResult.NotID;
-            if (Read(id, out MinecraftMod mod) == IsNotExistResult.Successful)
+            if (GetMod(id, out MinecraftMod mod) == IsNotExistResult.Successful)
             {
                 if (mod.ModPacks.IndexOf(modPack) != -1) return InModPackResult.InModPack;
                 mod.ModPacks.Add(modPack);
@@ -165,24 +190,36 @@
         public NotInModPackResult RemoveFromModPack(string id, string modPack)
         {
             if (!IsCorrectID(id)) return NotInModPackResult.NotID;
-            if (Read(id, out MinecraftMod mod) == IsNotExistResult.Successful)
+            if (GetMod(id, out MinecraftMod mod) == IsNotExistResult.Successful)
             {
                 if (mod.ModPacks.Remove(modPack)) return NotInModPackResult.Successful;
                 return NotInModPackResult.NotInModPack;
             }
             return NotInModPackResult.IsNotExist;
         }
-        public IsNotExistResult GetAllModsFromModPack(string modPack, out MinecraftMod[] mods)
+        public IsNotExistResult GetAllModsFromModPack(string modPack, out string[] mods)
         {
-            List<MinecraftMod> result = new();
+            List<string> result = new();
             for (int i = 0; i < Database.Count; i++)
             {
                 var mod = Database[i];
-                if (mod.ModPacks.IndexOf(modPack) != -1) result.Add(mod);
+                if (mod.ModPacks.IndexOf(modPack) != -1) result.Add(mod.Id);
             }
             mods = result.ToArray();
             if (mods.Length == 0) return IsNotExistResult.IsNotExist;
             return IsNotExistResult.Successful;
+        }
+
+        public IsNotExistResult GetModPacks(string id, out string[] result)
+        {
+            result = [];
+            if (!IsCorrectID(id)) return IsNotExistResult.NotID;
+            if (GetMod(id, out MinecraftMod mod) == IsNotExistResult.Successful)
+            {
+                result = mod.ModPacks.ToArray();
+                return IsNotExistResult.Successful;
+            }
+            return IsNotExistResult.IsNotExist;
         }
         #endregion // DatabaseWork
     }

@@ -56,5 +56,20 @@
         {
             return IsJavaMod ? $"JAVA [{Id}] {Name} {Version} by {Author}" : $"BEDROCK [{Id}] {Name} {Version} by {Author}";
         }
+
+        public Dictionary<string, object> ToJSON()
+        {
+            return new()
+            {
+                { "Id", Id },
+                { "Name", Name },
+                { "Description", Description },
+                { "Author", Author },
+                { "Version", Version },
+                { "IsJavaMod", IsJavaMod },
+                { "Rank", Rank },
+                { "ModPacks", ModPacks },
+            };
+        }
     }
 }
