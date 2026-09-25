@@ -12,8 +12,21 @@ string InputExistIDOrEmptyString()
     while (true)
     {
         id = ConsoleUtils.InputString();
-        if (id == "" || db.Has(id)) break;
-        ConsoleUtils.Warn($"Mod with id \"{id}\" is not exist!");
+        if (id == "")
+        {
+            break;
+        }
+        if (!db.IsCorrectID(id))
+        {
+            ConsoleUtils.Warn($"Incorrect id \"{id}\"!");
+            continue;
+        }
+        if (!db.Has(id))
+        {
+            ConsoleUtils.Warn($"Mod with id \"{id}\" is not exist!");
+            continue;
+        }
+        break;
     }
     Console.ForegroundColor = ConsoleColor.White;
     Console.WriteLine(" ---------------------\n");
@@ -44,8 +57,17 @@ while (true)
                     while (true)
                     {
                         id = ConsoleUtils.InputString();
-                        if (!db.Has(id)) break;
-                        ConsoleUtils.Warn($"Mod with id \"{id}\" is exist!");
+                        if (!db.IsCorrectID(id))
+                        {
+                            ConsoleUtils.Warn($"Incorrect id \"{id}\"!");
+                            continue;
+                        }
+                        if (db.Has(id))
+                        {
+                            ConsoleUtils.Warn($"Mod with id \"{id}\" is exist!");
+                            continue;
+                        }
+                        break;
                     }
                     Console.ForegroundColor = ConsoleColor.White;
                     Console.WriteLine(" ---[ (string) NAME ]---");

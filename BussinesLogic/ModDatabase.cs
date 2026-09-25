@@ -4,22 +4,26 @@ namespace BussinesLogic
 {
     public enum IsExistResult
     {
+        NotID,
         IsExist,
         Successful
     }
     public enum IsNotExistResult
     {
+        NotID,
         IsNotExist,
         Successful
     }
     public enum InModPackResult
     {
+        NotID,
         IsNotExist,
         InModPack,
         Successful
     }
     public enum NotInModPackResult
     {
+        NotID,
         IsNotExist,
         NotInModPack,
         Successful
@@ -70,6 +74,11 @@ namespace BussinesLogic
         {
             return (from mod in Database select mod).ToArray();
         }
+
+        public bool IsCorrectID(string id)
+        {
+            return !id.IsWhiteSpace();
+        }
         #endregion // Base
 
         #region DatabaseWork
@@ -80,6 +89,7 @@ namespace BussinesLogic
         /// <returns></returns>
         public IsExistResult Create(string id, string name, string description, string author, ModVersion version, bool isJavaMod, int rank, List<string> modPacks)
         {
+            if (!IsCorrectID(id)) return IsExistResult.NotID;
             if (Has(id)) return IsExistResult.IsExist;
             Database.Add(new(id, name, description, author, version, isJavaMod, rank, modPacks));
             return IsExistResult.Successful;
@@ -91,6 +101,7 @@ namespace BussinesLogic
         /// <returns></returns>
         public IsNotExistResult Delete(string id)
         {
+            if (!IsCorrectID(id)) return IsNotExistResult.NotID;
             int find = IndexOf(id);
             if (find == -1) return IsNotExistResult.IsNotExist;
             Database.RemoveAt(find);
@@ -104,6 +115,7 @@ namespace BussinesLogic
         public IsNotExistResult Read(string id, out MinecraftMod mod)
         {
             mod = null;
+            if (!IsCorrectID(id)) return IsNotExistResult.NotID;
             int find = IndexOf(id);
             if (find == -1) return IsNotExistResult.IsNotExist;
             mod = Database[find];
@@ -116,6 +128,7 @@ namespace BussinesLogic
         /// <returns></returns>
         public IsNotExistResult Update(string id, string? name = null, string? description = null, string? author = null, ModVersion? version = null, int? rank = null, List<string>? modPacks = null)
         {
+            if (!IsCorrectID(id)) return IsNotExistResult.NotID;
             if (Read(id, out MinecraftMod mod) == IsNotExistResult.Successful)
             {
                 mod.Name = name ?? mod.Name;
@@ -132,6 +145,7 @@ namespace BussinesLogic
         public IsNotExistResult InModPack(string id, string modPack, out bool result)
         {
             result = false;
+            if (!IsCorrectID(id)) return IsNotExistResult.NotID;
             if (Read(id, out MinecraftMod mod) == IsNotExistResult.Successful)
             {
                 if (mod.ModPacks.IndexOf(modPack) != -1) result = true;
@@ -141,6 +155,7 @@ namespace BussinesLogic
         }
         public InModPackResult AddToModPack(string id, string modPack)
         {
+            if (!IsCorrectID(id)) return InModPackResult.NotID;
             if (Read(id, out MinecraftMod mod) == IsNotExistResult.Successful)
             {
                 if (mod.ModPacks.IndexOf(modPack) != -1) return InModPackResult.InModPack;
@@ -151,6 +166,7 @@ namespace BussinesLogic
         }
         public NotInModPackResult RemoveFromModPack(string id, string modPack)
         {
+            if (!IsCorrectID(id)) return NotInModPackResult.NotID;
             if (Read(id, out MinecraftMod mod) == IsNotExistResult.Successful)
             {
                 if (mod.ModPacks.Remove(modPack)) return NotInModPackResult.Successful;

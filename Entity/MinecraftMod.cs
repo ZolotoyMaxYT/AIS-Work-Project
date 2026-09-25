@@ -4,8 +4,7 @@
     {
         Alpha,
         Beta,
-        Release,
-        DEMO
+        Release
     }
     public struct ModVersion
     {

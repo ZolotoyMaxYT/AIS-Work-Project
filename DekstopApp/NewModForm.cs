@@ -23,6 +23,9 @@ namespace DekstopApp
         {
             switch (Mainform.Database.Create(IDInput.Text, NameInput.Text, DescriptionInput.Text.Replace(Environment.NewLine, "\n"), AuthorInput.Text, new((Entity.TypeVersion)VersionTypeInput.SelectedIndex, (int)VersionAInput.Value, (int)VersionBInput.Value, (int)VersionCInput.Value), IsJavaInput.SelectedIndex == 0, (int)RankInput.Value, ModpackInput.Text.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).ToList()))
             {
+                case BussinesLogic.IsExistResult.NotID:
+                    MessageBox.Show(null, $"Incorrect id \"{IDInput.Text}\"!", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    break;
                 case BussinesLogic.IsExistResult.IsExist:
                     MessageBox.Show(null, $"Mod with id \"{IDInput.Text}\" is exist!", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     break;
