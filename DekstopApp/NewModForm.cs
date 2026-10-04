@@ -11,7 +11,6 @@ namespace DekstopApp
         {
             InitializeComponent();
             Mainform = mainform;
-            VersionTypeInput.SelectedIndex = 0;
             IsJavaInput.SelectedIndex = 0;
         }
 
@@ -22,23 +21,30 @@ namespace DekstopApp
                 MessageBox.Show(null, $"Incorrect mod type \"{IsJavaInput.Text}\"!", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            if (VersionTypeInput.SelectedIndex == -1)
+            
+            if (MinecraftVersionFirstInput.Version > MinecraftVersionLastInput.Version)
             {
-                MessageBox.Show(null, $"Incorrect mod version type \"{VersionTypeInput.Text}\"!", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(null, $"Incorrect minecraft version! First bigger than last!", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            switch (Mainform.Database.Create(IDInput.Text, NameInput.Text, DescriptionInput.Text.Replace(Environment.NewLine, "\n"), AuthorInput.Text, new((TypeVersion)VersionTypeInput.SelectedIndex, (int)VersionAInput.Value, (int)VersionBInput.Value, (int)VersionCInput.Value), IsJavaInput.SelectedIndex == 0, (int)RankInput.Value, ModpackInput.Text.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).ToList()))
+
+            switch (Mainform.Database.Create(IDInput.Text, NameInput.Text, DescriptionInput.Text.Replace(Environment.NewLine, "\n"), AuthorInput.Text, VersionInput.Version, new(MinecraftVersionFirstInput.Version, MinecraftVersionLastInput.Version), IsJavaInput.SelectedIndex == 0, (int)RankInput.Value, TagsInput.Text.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).ToList()))
             {
-                case BussinesLogic.IsExistResult.NotID:
+                case IsExistResult.NotID:
                     MessageBox.Show(null, $"Incorrect id \"{IDInput.Text}\"!", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     break;
-                case BussinesLogic.IsExistResult.IsExist:
+                case IsExistResult.IsExist:
                     MessageBox.Show(null, $"Mod with id \"{IDInput.Text}\" is exist!", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     break;
-                case BussinesLogic.IsExistResult.Successful:
+                case IsExistResult.Successful:
                     Close();
                     break;
             }
+        }
+
+        private void VersionButton_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -30,8 +30,8 @@
         {
             tableLayoutPanel1 = new TableLayoutPanel();
             tableLayoutPanel2 = new TableLayoutPanel();
-            TitleText = new Label();
             tableLayoutPanel3 = new TableLayoutPanel();
+            MinecraftVersionText = new Label();
             label2 = new Label();
             label3 = new Label();
             label4 = new Label();
@@ -43,7 +43,9 @@
             ChangeButton = new Button();
             label6 = new Label();
             DescriptionText = new TextBox();
-            ModpackText = new TextBox();
+            TagsText = new TextBox();
+            TitleText = new Label();
+            MinecraftVersionEdit = new Button();
             tableLayoutPanel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
             tableLayoutPanel3.SuspendLayout();
@@ -59,16 +61,16 @@
             tableLayoutPanel1.Controls.Add(ChangeButton, 0, 4);
             tableLayoutPanel1.Controls.Add(label6, 0, 2);
             tableLayoutPanel1.Controls.Add(DescriptionText, 0, 1);
-            tableLayoutPanel1.Controls.Add(ModpackText, 0, 3);
+            tableLayoutPanel1.Controls.Add(TagsText, 0, 3);
             tableLayoutPanel1.Location = new Point(12, 12);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 5;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 100F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 156F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 66.6666641F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 50F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 50F));
-            tableLayoutPanel1.Size = new Size(683, 554);
+            tableLayoutPanel1.Size = new Size(683, 639);
             tableLayoutPanel1.TabIndex = 0;
             // 
             // tableLayoutPanel2
@@ -77,7 +79,7 @@
             tableLayoutPanel2.BackColor = SystemColors.ControlLightLight;
             tableLayoutPanel2.ColumnCount = 2;
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 266F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 334F));
             tableLayoutPanel2.Controls.Add(TitleText, 0, 0);
             tableLayoutPanel2.Controls.Add(tableLayoutPanel3, 1, 0);
             tableLayoutPanel2.Location = new Point(1, 1);
@@ -85,22 +87,8 @@
             tableLayoutPanel2.Name = "tableLayoutPanel2";
             tableLayoutPanel2.RowCount = 1;
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel2.Size = new Size(681, 100);
+            tableLayoutPanel2.Size = new Size(681, 156);
             tableLayoutPanel2.TabIndex = 0;
-            // 
-            // TitleText
-            // 
-            TitleText.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            TitleText.AutoSize = true;
-            TitleText.BorderStyle = BorderStyle.FixedSingle;
-            TitleText.Font = new Font("Segoe UI", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            TitleText.Location = new Point(0, 0);
-            TitleText.Margin = new Padding(0);
-            TitleText.Name = "TitleText";
-            TitleText.Size = new Size(415, 100);
-            TitleText.TabIndex = 0;
-            TitleText.Text = "[ID] NAME";
-            TitleText.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // tableLayoutPanel3
             // 
@@ -108,7 +96,8 @@
             tableLayoutPanel3.CellBorderStyle = TableLayoutPanelCellBorderStyle.Single;
             tableLayoutPanel3.ColumnCount = 2;
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 200F));
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 257F));
+            tableLayoutPanel3.Controls.Add(MinecraftVersionText, 1, 4);
             tableLayoutPanel3.Controls.Add(label2, 0, 0);
             tableLayoutPanel3.Controls.Add(label3, 0, 1);
             tableLayoutPanel3.Controls.Add(label4, 0, 2);
@@ -117,16 +106,30 @@
             tableLayoutPanel3.Controls.Add(VersionText, 1, 3);
             tableLayoutPanel3.Controls.Add(RankText, 1, 1);
             tableLayoutPanel3.Controls.Add(AuthorText, 1, 0);
-            tableLayoutPanel3.Location = new Point(415, 0);
+            tableLayoutPanel3.Controls.Add(MinecraftVersionEdit, 0, 4);
+            tableLayoutPanel3.Location = new Point(347, 0);
             tableLayoutPanel3.Margin = new Padding(0);
             tableLayoutPanel3.Name = "tableLayoutPanel3";
-            tableLayoutPanel3.RowCount = 4;
-            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
-            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
-            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
-            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
-            tableLayoutPanel3.Size = new Size(266, 100);
+            tableLayoutPanel3.RowCount = 5;
+            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
+            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
+            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
+            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
+            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
+            tableLayoutPanel3.Size = new Size(334, 156);
             tableLayoutPanel3.TabIndex = 1;
+            // 
+            // MinecraftVersionText
+            // 
+            MinecraftVersionText.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            MinecraftVersionText.AutoSize = true;
+            MinecraftVersionText.Font = new Font("Segoe UI", 9.75F);
+            MinecraftVersionText.Location = new Point(79, 125);
+            MinecraftVersionText.Name = "MinecraftVersionText";
+            MinecraftVersionText.Size = new Size(251, 30);
+            MinecraftVersionText.TabIndex = 9;
+            MinecraftVersionText.Text = "v1.0.0 (Alpha)";
+            MinecraftVersionText.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // label2
             // 
@@ -135,7 +138,7 @@
             label2.Font = new Font("Segoe UI", 9.75F);
             label2.Location = new Point(4, 1);
             label2.Name = "label2";
-            label2.Size = new Size(57, 23);
+            label2.Size = new Size(68, 30);
             label2.TabIndex = 8;
             label2.Text = "Author";
             label2.TextAlign = ContentAlignment.MiddleCenter;
@@ -145,9 +148,9 @@
             label3.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             label3.AutoSize = true;
             label3.Font = new Font("Segoe UI", 9.75F);
-            label3.Location = new Point(4, 25);
+            label3.Location = new Point(4, 32);
             label3.Name = "label3";
-            label3.Size = new Size(57, 23);
+            label3.Size = new Size(68, 30);
             label3.TabIndex = 6;
             label3.Text = "Rank";
             label3.TextAlign = ContentAlignment.MiddleCenter;
@@ -157,9 +160,9 @@
             label4.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             label4.AutoSize = true;
             label4.Font = new Font("Segoe UI", 9.75F);
-            label4.Location = new Point(4, 49);
+            label4.Location = new Point(4, 63);
             label4.Name = "label4";
-            label4.Size = new Size(57, 23);
+            label4.Size = new Size(68, 30);
             label4.TabIndex = 7;
             label4.Text = "Type";
             label4.TextAlign = ContentAlignment.MiddleCenter;
@@ -169,9 +172,9 @@
             label5.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             label5.AutoSize = true;
             label5.Font = new Font("Segoe UI", 9.75F);
-            label5.Location = new Point(4, 73);
+            label5.Location = new Point(4, 94);
             label5.Name = "label5";
-            label5.Size = new Size(57, 26);
+            label5.Size = new Size(68, 30);
             label5.TabIndex = 5;
             label5.Text = "Version";
             label5.TextAlign = ContentAlignment.MiddleCenter;
@@ -181,9 +184,9 @@
             TypeText.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             TypeText.AutoSize = true;
             TypeText.Font = new Font("Segoe UI", 9.75F);
-            TypeText.Location = new Point(68, 49);
+            TypeText.Location = new Point(79, 63);
             TypeText.Name = "TypeText";
-            TypeText.Size = new Size(194, 23);
+            TypeText.Size = new Size(251, 30);
             TypeText.TabIndex = 4;
             TypeText.Text = "Java Mod";
             TypeText.TextAlign = ContentAlignment.MiddleLeft;
@@ -193,9 +196,9 @@
             VersionText.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             VersionText.AutoSize = true;
             VersionText.Font = new Font("Segoe UI", 9.75F);
-            VersionText.Location = new Point(68, 73);
+            VersionText.Location = new Point(79, 94);
             VersionText.Name = "VersionText";
-            VersionText.Size = new Size(194, 26);
+            VersionText.Size = new Size(251, 30);
             VersionText.TabIndex = 2;
             VersionText.Text = "v1.0.0 (Alpha)";
             VersionText.TextAlign = ContentAlignment.MiddleLeft;
@@ -205,9 +208,9 @@
             RankText.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             RankText.AutoSize = true;
             RankText.Font = new Font("Segoe UI", 9.75F);
-            RankText.Location = new Point(68, 25);
+            RankText.Location = new Point(79, 32);
             RankText.Name = "RankText";
-            RankText.Size = new Size(194, 23);
+            RankText.Size = new Size(251, 30);
             RankText.TabIndex = 3;
             RankText.Text = "100";
             RankText.TextAlign = ContentAlignment.MiddleLeft;
@@ -217,9 +220,9 @@
             AuthorText.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             AuthorText.AutoSize = true;
             AuthorText.Font = new Font("Segoe UI", 9.75F);
-            AuthorText.Location = new Point(68, 1);
+            AuthorText.Location = new Point(79, 1);
             AuthorText.Name = "AuthorText";
-            AuthorText.Size = new Size(194, 23);
+            AuthorText.Size = new Size(251, 30);
             AuthorText.TabIndex = 1;
             AuthorText.Text = "ZMYT";
             AuthorText.TextAlign = ContentAlignment.MiddleLeft;
@@ -228,10 +231,10 @@
             // 
             ChangeButton.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             ChangeButton.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            ChangeButton.Location = new Point(1, 503);
+            ChangeButton.Location = new Point(1, 587);
             ChangeButton.Margin = new Padding(0);
             ChangeButton.Name = "ChangeButton";
-            ChangeButton.Size = new Size(681, 50);
+            ChangeButton.Size = new Size(681, 51);
             ChangeButton.TabIndex = 1;
             ChangeButton.Text = "Edit mod";
             ChangeButton.UseVisualStyleBackColor = true;
@@ -243,43 +246,69 @@
             label6.AutoSize = true;
             label6.BackColor = SystemColors.ControlLightLight;
             label6.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            label6.Location = new Point(4, 335);
+            label6.Location = new Point(4, 410);
             label6.Name = "label6";
             label6.Size = new Size(675, 50);
             label6.TabIndex = 3;
-            label6.Text = "Modpacks";
+            label6.Text = "Tags";
             label6.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // DescriptionText
             // 
             DescriptionText.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             DescriptionText.BorderStyle = BorderStyle.None;
-            DescriptionText.Location = new Point(4, 105);
+            DescriptionText.Location = new Point(4, 161);
             DescriptionText.Multiline = true;
             DescriptionText.Name = "DescriptionText";
             DescriptionText.ReadOnly = true;
             DescriptionText.ScrollBars = ScrollBars.Both;
-            DescriptionText.Size = new Size(675, 226);
+            DescriptionText.Size = new Size(675, 245);
             DescriptionText.TabIndex = 5;
             // 
-            // ModpackText
+            // TagsText
             // 
-            ModpackText.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            ModpackText.BorderStyle = BorderStyle.None;
-            ModpackText.Location = new Point(4, 389);
-            ModpackText.Multiline = true;
-            ModpackText.Name = "ModpackText";
-            ModpackText.ReadOnly = true;
-            ModpackText.ScrollBars = ScrollBars.Both;
-            ModpackText.Size = new Size(675, 110);
-            ModpackText.TabIndex = 6;
+            TagsText.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            TagsText.BorderStyle = BorderStyle.None;
+            TagsText.Location = new Point(4, 464);
+            TagsText.Multiline = true;
+            TagsText.Name = "TagsText";
+            TagsText.ReadOnly = true;
+            TagsText.ScrollBars = ScrollBars.Both;
+            TagsText.Size = new Size(675, 119);
+            TagsText.TabIndex = 6;
+            // 
+            // TitleText
+            // 
+            TitleText.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            TitleText.AutoSize = true;
+            TitleText.BorderStyle = BorderStyle.FixedSingle;
+            TitleText.Font = new Font("Segoe UI", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            TitleText.Location = new Point(0, 0);
+            TitleText.Margin = new Padding(0);
+            TitleText.Name = "TitleText";
+            TitleText.Size = new Size(347, 156);
+            TitleText.TabIndex = 2;
+            TitleText.Text = "[ID] NAME";
+            TitleText.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // MinecraftVersionEdit
+            // 
+            MinecraftVersionEdit.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            MinecraftVersionEdit.Location = new Point(1, 125);
+            MinecraftVersionEdit.Margin = new Padding(0);
+            MinecraftVersionEdit.Name = "MinecraftVersionEdit";
+            MinecraftVersionEdit.Size = new Size(74, 30);
+            MinecraftVersionEdit.TabIndex = 10;
+            MinecraftVersionEdit.Text = "Minecraft";
+            MinecraftVersionEdit.UseVisualStyleBackColor = true;
+            MinecraftVersionEdit.Click += MinecraftVersionEdit_Click;
             // 
             // InfoModForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.Control;
-            ClientSize = new Size(707, 578);
+            ClientSize = new Size(707, 663);
             Controls.Add(tableLayoutPanel1);
             Name = "InfoModForm";
             Text = "InfoModForm";
@@ -296,7 +325,6 @@
 
         private TableLayoutPanel tableLayoutPanel1;
         private TableLayoutPanel tableLayoutPanel2;
-        private Label TitleText;
         private TableLayoutPanel tableLayoutPanel3;
         private Label VersionText;
         private Label AuthorText;
@@ -309,6 +337,9 @@
         private Button ChangeButton;
         private Label label6;
         private TextBox DescriptionText;
-        private TextBox ModpackText;
+        private TextBox TagsText;
+        private Label MinecraftVersionText;
+        private Label TitleText;
+        private Button MinecraftVersionEdit;
     }
 }

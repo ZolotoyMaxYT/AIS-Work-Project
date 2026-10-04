@@ -30,7 +30,7 @@
         {
             tableLayoutPanel3 = new TableLayoutPanel();
             tableLayoutPanel1 = new TableLayoutPanel();
-            ModpackInput = new TextBox();
+            TagsInput = new TextBox();
             AuthorInput = new TextBox();
             NameInput = new TextBox();
             label1 = new Label();
@@ -85,7 +85,7 @@
             tableLayoutPanel1.ColumnCount = 2;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 80F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Controls.Add(ModpackInput, 1, 7);
+            tableLayoutPanel1.Controls.Add(TagsInput, 1, 7);
             tableLayoutPanel1.Controls.Add(AuthorInput, 1, 2);
             tableLayoutPanel1.Controls.Add(NameInput, 1, 1);
             tableLayoutPanel1.Controls.Add(label1, 0, 0);
@@ -115,17 +115,17 @@
             tableLayoutPanel1.Size = new Size(448, 481);
             tableLayoutPanel1.TabIndex = 0;
             // 
-            // ModpackInput
+            // TagsInput
             // 
-            ModpackInput.AcceptsReturn = true;
-            ModpackInput.AcceptsTab = true;
-            ModpackInput.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            ModpackInput.Location = new Point(83, 346);
-            ModpackInput.Multiline = true;
-            ModpackInput.Name = "ModpackInput";
-            ModpackInput.ScrollBars = ScrollBars.Both;
-            ModpackInput.Size = new Size(362, 132);
-            ModpackInput.TabIndex = 15;
+            TagsInput.AcceptsReturn = true;
+            TagsInput.AcceptsTab = true;
+            TagsInput.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            TagsInput.Location = new Point(83, 346);
+            TagsInput.Multiline = true;
+            TagsInput.Name = "TagsInput";
+            TagsInput.ScrollBars = ScrollBars.Both;
+            TagsInput.Size = new Size(362, 132);
+            TagsInput.TabIndex = 15;
             // 
             // AuthorInput
             // 
@@ -228,7 +228,7 @@
             label8.Name = "label8";
             label8.Size = new Size(74, 138);
             label8.TabIndex = 7;
-            label8.Text = "Modpacks";
+            label8.Text = "Tags";
             label8.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // RankInput
@@ -424,7 +424,7 @@
 
         private TableLayoutPanel tableLayoutPanel3;
         private TableLayoutPanel tableLayoutPanel1;
-        private TextBox ModpackInput;
+        private TextBox TagsInput;
         private TextBox AuthorInput;
         private TextBox NameInput;
         private Label label1;

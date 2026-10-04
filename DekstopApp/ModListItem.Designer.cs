@@ -32,7 +32,7 @@
             tableLayoutPanel1 = new TableLayoutPanel();
             OpenButton = new Button();
             DeleteButton = new Button();
-            Modpacks = new Label();
+            Tags = new Label();
             tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -58,7 +58,7 @@
             tableLayoutPanel1.Controls.Add(Title, 0, 0);
             tableLayoutPanel1.Controls.Add(OpenButton, 1, 0);
             tableLayoutPanel1.Controls.Add(DeleteButton, 1, 1);
-            tableLayoutPanel1.Controls.Add(Modpacks, 0, 1);
+            tableLayoutPanel1.Controls.Add(Tags, 0, 1);
             tableLayoutPanel1.Location = new Point(3, 3);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 2;
@@ -92,18 +92,18 @@
             DeleteButton.UseVisualStyleBackColor = true;
             DeleteButton.Click += DeleteButton_Click;
             // 
-            // Modpacks
+            // Tags
             // 
-            Modpacks.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            Modpacks.AutoSize = true;
-            Modpacks.BackColor = SystemColors.Control;
-            Modpacks.Location = new Point(0, 32);
-            Modpacks.Margin = new Padding(0);
-            Modpacks.Name = "Modpacks";
-            Modpacks.Size = new Size(329, 33);
-            Modpacks.TabIndex = 3;
-            Modpacks.Text = "AAA, AAA, AAA";
-            Modpacks.TextAlign = ContentAlignment.MiddleLeft;
+            Tags.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            Tags.AutoSize = true;
+            Tags.BackColor = SystemColors.Control;
+            Tags.Location = new Point(0, 32);
+            Tags.Margin = new Padding(0);
+            Tags.Name = "Tags";
+            Tags.Size = new Size(329, 33);
+            Tags.TabIndex = 3;
+            Tags.Text = "AAA, AAA, AAA";
+            Tags.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // ModListItem
             // 
@@ -126,6 +126,6 @@
         private TableLayoutPanel tableLayoutPanel1;
         private Button OpenButton;
         private Button DeleteButton;
-        private Label Modpacks;
+        private Label Tags;
     }
 }

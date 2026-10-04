@@ -16,19 +16,19 @@ namespace DekstopApp
             Database.Create("ExempleMod", "Exemple mod",      
                 "This is an exemple mod for Minecraft Java!\nYou can use it to create your own mod.", 
                 "Mr. Coder", 
-                new(TypeVersion.Release, 1, 0, 0), true, 100, ["coder pack", "mr coder", "open source"]);
+                new(TypeVersion.Release, 1, 0, 0), new(new(TypeVersion.Release, 1, 7, 0), new(TypeVersion.Release, 1, 7, 10)), true, 100, ["coder pack", "mr coder", "open source"]);
             Database.Create("SmallMod",     "Small mod",
                 "This is a very small mod for MinecraftJava! :D\nAnd... :p\nIt's my first mod! >w<", 
                 "Ms. Coder",
-                new(TypeVersion.Alpha, 1, 36, 114), true, 70, ["coder pack"]);
+                new(TypeVersion.Alpha, 1, 36, 114), new(new(TypeVersion.Release, 1, 7, 0), new(TypeVersion.Release, 1, 7, 10)), true, 70, ["coder pack"]);
             Database.Create("AnotherMod", "Another mod",      
                 "Another mod for Minecraft Java!\nPlay with your favorite monster!\nTime to play!", 
                 "Mr. Coder", 
-                new(TypeVersion.Beta, 25, 17, 231), true, 135, ["coder pack", "mr coder"]);
+                new(TypeVersion.Beta, 25, 17, 231), new(new(TypeVersion.Release, 1, 8, 0), new(TypeVersion.Release, 1, 8, 8)), true, 135, ["coder pack", "mr coder"]);
             Database.Create("VeryBadMod", "Very bad mod!", 
                 "DON'T DOWNLOAD THIS MOD!!!!\nIT DESTROY YOUR MINECRAFT!!!\nNEW 2.1.0 VERSION!!!!", 
                 "Mr. Virus", 
-                new(TypeVersion.Alpha, 2, 1, 0), false, -5261, []);
+                new(TypeVersion.Alpha, 2, 1, 0), new(new(TypeVersion.Release, 1, 13, 0), new(TypeVersion.Release, 1, 16, 2)), false, -5261, []);
             MenuUpdate();
             ModList_SizeChange(null, new());
             SizeChanged += ModList_SizeChange;
@@ -38,7 +38,7 @@ namespace DekstopApp
         {
             ModList.Controls.Clear();
             ModList.Controls.Add(hiddenLabel);
-            foreach (var item in Database.ListOfIDMods())
+            foreach (var item in Database.GetListOfIDMods())
             {
                 var a = new ModListItem(this, item)
                 {

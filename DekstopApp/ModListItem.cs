@@ -13,10 +13,10 @@ namespace DekstopApp
             InitializeComponent();
             Mod = mod;
             Mainform = mainform;
-            Mainform.Database.ToString(mod, out string result);
+            Mainform.Database.GetStringMod(mod, out string result);
             Title.Text = result;
-            Mainform.Database.GetModPacks(mod, out string[] modpacks);
-            Modpacks.Text = String.Join(", ", modpacks);
+            Mainform.Database.GetAllTags(mod, out string[] tags);
+            Tags.Text = String.Join(", ", tags);
         }
         public ModListItem()
         {

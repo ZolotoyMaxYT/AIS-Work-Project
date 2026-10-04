@@ -18,13 +18,13 @@ namespace DekstopApp
             NameInput.Text = (string)data["Name"];
             AuthorInput.Text = (string)data["Author"];
             DescriptionInput.Text = ((string)data["Description"]).Replace("\n", Environment.NewLine);
-            VersionAInput.Value = ((ModVersion)data["Version"]).A;
-            VersionBInput.Value = ((ModVersion)data["Version"]).B;
-            VersionCInput.Value = ((ModVersion)data["Version"]).C;
-            VersionTypeInput.SelectedIndex = (int)((ModVersion)data["Version"]).Type;
+            VersionAInput.Value = ((EntityVersion)data["Version"]).A;
+            VersionBInput.Value = ((EntityVersion)data["Version"]).B;
+            VersionCInput.Value = ((EntityVersion)data["Version"]).C;
+            VersionTypeInput.SelectedIndex = (int)((EntityVersion)data["Version"]).Type;
             TypeText.Text = (bool)data["IsJavaMod"] ? "Java mod" : "Bedrock mod";
             RankInput.Value = (int)data["Rank"];
-            ModpackInput.Text = String.Join(Environment.NewLine, (List<string>)data["ModPacks"]);
+            TagsInput.Text = String.Join(Environment.NewLine, (List<string>)data["Tags"]);
         }
 
         private void UpdateButton_Click(object sender, EventArgs e)
@@ -36,7 +36,7 @@ namespace DekstopApp
             }
             Mainform.Database.Update(Mod, NameInput.Text, DescriptionInput.Text.Replace(Environment.NewLine, "\n"), AuthorInput.Text,
                 new((TypeVersion)VersionTypeInput.SelectedIndex, (int)VersionAInput.Value, (int)VersionBInput.Value, (int)VersionCInput.Value),
-                (int)RankInput.Value, ModpackInput.Text.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).ToList());
+                (int)RankInput.Value, TagsInput.Text.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).ToList());
             Close();
         }
     }

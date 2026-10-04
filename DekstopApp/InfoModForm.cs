@@ -17,8 +17,9 @@ namespace DekstopApp
             RankText.Text = ((int)mod["Rank"]).ToString();
             TypeText.Text = (bool)mod["IsJavaMod"] ? "Java Mod" : "Bedrock Mod";
             VersionText.Text = mod["Version"].ToString();
+            MinecraftVersionText.Text = mod["MinecraftVersion"].ToString();
             DescriptionText.Text = ((string)mod["Description"]).Replace("\n", Environment.NewLine);
-            ModpackText.Text = string.Join(Environment.NewLine, (List<string>)mod["ModPacks"]);
+            TagsText.Text = string.Join(Environment.NewLine, (List<string>)mod["Tags"]);
         }
 
         public InfoModForm(MainForm mainform, string mod)
@@ -33,6 +34,15 @@ namespace DekstopApp
         {
             new EditModForm(Mainform, Mod).ShowDialog();
             FormUpdate();
+            Mainform.MenuUpdate();
+        }
+
+        private void MinecraftVersionEdit_Click(object sender, EventArgs e)
+        {
+            Mainform.Database.Read(Mod, out var mod);
+            new MinecraftVersionEdit(Mainform.Database, Mod, (MinecraftVersion)mod["MinecraftVersion"]).ShowDialog();
+            Mainform.Database.Read(Mod, out mod);
+            MinecraftVersionText.Text = mod["MinecraftVersion"].ToString();
             Mainform.MenuUpdate();
         }
     }

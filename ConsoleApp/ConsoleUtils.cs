@@ -109,15 +109,16 @@ namespace ConsoleApp
             Console.WriteLine( "+-+-------------------");
             Console.WriteLine($"|-[Author]: {mod["Author"]}");
             Console.WriteLine($"|-[Version]: {mod["Version"]}");
+            Console.WriteLine($"|-[Minecraft Version]: {mod["MinecraftVersion"]}");
             Console.WriteLine($"|-[Type]: {GetString((bool)mod["IsJavaMod"], "Java mod", "Bedrock mod")}");
             Console.WriteLine($"|-[Rank]: {mod["Rank"]}");
             Console.WriteLine( "+-+-------------------");
-            Console.WriteLine( "| ModPacks");
+            Console.WriteLine( "| Tags");
             Console.WriteLine( "+-+-------------------");
-            Print((List<string>)mod["ModPacks"]);
+            Print((List<string>)mod["Tags"]);
             Console.WriteLine($"+---------------------");
         }
-        public static void PrintMods(ModDatabase db, string[] mods)
+        public static void PrintMods(ModDatabase db, string[] mods, EntityVersion minecraftVersion)
         {
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("---[ LIST OF MODS ]---");
@@ -129,12 +130,16 @@ namespace ConsoleApp
             {
                 for (int i = 0; i < mods.Length; i++)
                 {
-                    if (db.ToString(mods[i], out string result) == IsNotExistResult.Successful)
+                    if (db.GetStringMod(mods[i], out string result) == IsNotExistResult.Successful)
                     {
+                        db.IsCorrectForMinecraftVersion(mods[i], minecraftVersion, out bool res);
+                        if (res) Console.ForegroundColor = ConsoleColor.White;
+                        else Console.ForegroundColor = ConsoleColor.DarkGray;
                         Console.WriteLine($" * {result}");
                     }
                 }
             }
+            Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("----------------------");
         }
 
@@ -267,7 +272,7 @@ namespace ConsoleApp
         {
             return NullOrString(InputText());
         }
-        public static ModVersion InputVersion()
+        public static EntityVersion InputVersion()
         {
             // [v]1.0.0[(]{alpha|a, beta|b, release|r}[)]
             // v1.0.0 (alpha)
@@ -292,13 +297,13 @@ namespace ConsoleApp
                             {
                                 case "r":
                                 case "release":
-                                    return new ModVersion(TypeVersion.Release, a, b, c);
+                                    return new EntityVersion(TypeVersion.Release, a, b, c);
                                 case "b":
                                 case "beta":
-                                    return new ModVersion(TypeVersion.Beta, a, b, c);
+                                    return new EntityVersion(TypeVersion.Beta, a, b, c);
                                 case "a":
                                 case "alpha":
-                                    return new ModVersion(TypeVersion.Alpha, a, b, c);
+                                    return new EntityVersion(TypeVersion.Alpha, a, b, c);
                             }
                         }
                         else
@@ -311,7 +316,7 @@ namespace ConsoleApp
             Error("Incorrect data!\n * 1.0.0r, 1.0.0release -> v1.0.0 (release)\n * 1.0.0a, 1.0.0alpha -> v1.0.0 (alpha)\n * 1.0.0b, 1.0.0beta -> v1.0.0 (beta)\n");
             return InputVersion();
         }
-        public static ModVersion? InputVersionOrNull()
+        public static EntityVersion? InputVersionOrNull()
         {
             string text = InputString();
             if (text.Length == 0 || text.IsWhiteSpace()) return null;
@@ -334,13 +339,13 @@ namespace ConsoleApp
                             {
                                 case "r":
                                 case "release":
-                                    return new ModVersion(TypeVersion.Release, a, b, c);
+                                    return new EntityVersion(TypeVersion.Release, a, b, c);
                                 case "b":
                                 case "beta":
-                                    return new ModVersion(TypeVersion.Beta, a, b, c);
+                                    return new EntityVersion(TypeVersion.Beta, a, b, c);
                                 case "a":
                                 case "alpha":
-                                    return new ModVersion(TypeVersion.Alpha, a, b, c);
+                                    return new EntityVersion(TypeVersion.Alpha, a, b, c);
                             }
                         }
                         else
@@ -351,7 +356,7 @@ namespace ConsoleApp
                 }
             }
             Error("Incorrect data!\n * 1.0.0r, 1.0.0release -> v1.0.0 (release)\n * 1.0.0a, 1.0.0alpha -> v1.0.0 (alpha)\n * 1.0.0b, 1.0.0beta -> v1.0.0 (beta)\n");
-            return InputVersion();
+            return InputVersionOrNull();
         }
 
     }
