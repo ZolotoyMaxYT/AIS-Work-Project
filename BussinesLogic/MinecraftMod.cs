@@ -1,85 +1,5 @@
 ﻿namespace BussinesLogic
 {
-    public enum TypeVersion : byte
-    {
-        Alpha,
-        Beta,
-        Release
-    }
-    public struct EntityVersion
-    {
-        public TypeVersion Type;
-        public int A;
-        public int B;
-        public int C;
-
-        public EntityVersion(TypeVersion type, int a, int b, int c)
-        {
-            Type = type;
-            A = a;
-            B = b;
-            C = c;
-        }
-
-        public override string ToString()
-        {
-            return $"v{A}.{B}.{C} ({Type})";
-        }
-
-        public static bool operator==(EntityVersion x, EntityVersion y)
-        {
-            return x.Type == y.Type && x.A == y.A && x.B == y.B && x.C == y.C;
-        }
-        public static bool operator !=(EntityVersion x, EntityVersion y)
-        {
-            return x.Type != y.Type || x.A != y.A || x.B != y.B || x.C != y.C;
-        }
-        public static bool operator >(EntityVersion x, EntityVersion y)
-        {
-            return x.Type > y.Type || (x.Type == y.Type && x.A > y.A) || (x.Type == y.Type && x.A == y.A && x.B > y.B) || (x.Type == y.Type && x.A == y.A && x.B == y.B && x.C > y.C);
-        }
-        public static bool operator <(EntityVersion x, EntityVersion y)
-        {
-            return x.Type < y.Type || (x.Type == y.Type && x.A < y.A) || (x.Type == y.Type && x.A == y.A && x.B < y.B) || (x.Type == y.Type && x.A == y.A && x.B == y.B && x.C < y.C);
-        }
-        public static bool operator >=(EntityVersion x, EntityVersion y)
-        {
-            return x > y || x == y;
-        }
-        public static bool operator <=(EntityVersion x, EntityVersion y)
-        {
-            return x < y || x == y;
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is not null && obj is EntityVersion vers)
-            {
-                return this == vers;
-            }
-            return false;
-        }
-        public override int GetHashCode()
-        {
-            return Type.GetHashCode() + A.GetHashCode() + B.GetHashCode() + C.GetHashCode();
-        }
-    }
-    public struct MinecraftVersion
-    {
-        public EntityVersion First;
-        public EntityVersion Last;
-
-        public MinecraftVersion(EntityVersion first, EntityVersion last)
-        {
-            First = first;
-            Last = last;
-        }
-
-        public override string ToString()
-        {
-            return $"{First} - {Last}";
-        }
-    }
     public class MinecraftMod
     {
         public string Id;
@@ -87,17 +7,19 @@
         public string Description;
         public string Author;
         public EntityVersion Version;
-        public MinecraftVersion MinecraftVersion;
+        public ModMinecraftVersion MinecraftVersion;
         /// <summary>
         /// true is java, false is bedrock
         /// </summary>
         public bool IsJavaMod;
         public int Rank;
         public List<string> Tags;
+        public ModStatus Status;
+        
 
-        public MinecraftMod(string id, string name, string description, string author, EntityVersion version, MinecraftVersion minecraftVersion, bool isJavaMod, int rank, List<string> tags)
+        public MinecraftMod(string id, string name, string description, string author, EntityVersion version, ModMinecraftVersion minecraftVersion, bool isJavaMod, int rank, List<string> tags)
         {
-            Id = id;
+            Id = FormatID(id ,minecraftVersion.First);
             Name = name; 
             Description = description;
             Author = author; 
@@ -106,11 +28,15 @@
             IsJavaMod = isJavaMod; 
             Rank = rank;
             Tags = tags;
+            Status = ModStatus.Active;
         }
 
         public override string ToString()
         {
-            return IsJavaMod ? $"JAVA [{Id}] \"{Name}\" {Version} by {Author} [{MinecraftVersion}]" : $"BEDROCK [{Id}] \"{Name}\" {Version} by {Author} [{MinecraftVersion}]";
+            string prefix = Status == ModStatus.Banned ? "[BAN] " : "";
+            if (IsJavaMod) 
+                return prefix + $"JAVA [{Id}] \"{Name}\" {Version} by {Author} [{MinecraftVersion}]";
+            return prefix + $"BEDROCK [{Id}] \"{Name}\" {Version} by {Author} [{MinecraftVersion}]";
         }
 
         public Dictionary<string, object> ToJSON()
@@ -126,7 +52,27 @@
                 { "IsJavaMod", IsJavaMod },
                 { "Rank", Rank },
                 { "Tags", Tags },
+                { "Status", Status }
             };
+        }
+
+        /// <summary>
+        /// Formating mod's ID for minecraft's version 
+        /// </summary>
+        /// <param name="id">id of mod</param>
+        /// <param name="minecraftVersion">version of minecraft</param>
+        /// <returns></returns>
+        public static string FormatID(string id, EntityVersion minecraftVersion)
+        {
+            if (minecraftVersion >= new EntityVersion(TypeVersion.Release, 1, 13, 0))
+            {
+                return id.ToLower();
+            }
+            if (minecraftVersion >= new EntityVersion(TypeVersion.Release, 1, 8, 0))
+            {
+                return id.ToUpper();
+            }
+            return id;
         }
     }
 }

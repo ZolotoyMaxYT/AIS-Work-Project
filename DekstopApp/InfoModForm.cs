@@ -20,6 +20,18 @@ namespace DekstopApp
             MinecraftVersionText.Text = mod["MinecraftVersion"].ToString();
             DescriptionText.Text = ((string)mod["Description"]).Replace("\n", Environment.NewLine);
             TagsText.Text = string.Join(Environment.NewLine, (List<string>)mod["Tags"]);
+
+            Mainform.Database.CheckStatusMod(Mod, out ModStatus status);
+            if (status == ModStatus.Banned)
+            {
+                ChangeButton.Enabled = false;
+                MinecraftVersionEdit.Enabled = false;
+            }
+            else
+            {
+                ChangeButton.Enabled = true;
+                MinecraftVersionEdit.Enabled = true;
+            }
         }
 
         public InfoModForm(MainForm mainform, string mod)
@@ -40,9 +52,10 @@ namespace DekstopApp
         private void MinecraftVersionEdit_Click(object sender, EventArgs e)
         {
             Mainform.Database.Read(Mod, out var mod);
-            new MinecraftVersionEdit(Mainform.Database, Mod, (MinecraftVersion)mod["MinecraftVersion"]).ShowDialog();
-            Mainform.Database.Read(Mod, out mod);
-            MinecraftVersionText.Text = mod["MinecraftVersion"].ToString();
+            var nnve = new ModMinecraftVersionEdit(Mainform.Database, Mod, (ModMinecraftVersion)mod["MinecraftVersion"]);
+            nnve.ShowDialog();
+            Mod = nnve.Mod;
+            FormUpdate();
             Mainform.MenuUpdate();
         }
     }

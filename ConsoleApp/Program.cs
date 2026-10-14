@@ -1,41 +1,13 @@
 ﻿using BussinesLogic;
 using ConsoleApp;
 
-ConsoleMenu menu = new(["list of mods", "create", "read", "delete", "update", "add tag", "delete tag", "all tags of mod", "change minecraft version for mod", "change minecraft version for user"]);
+ConsoleMenu menu = new(["list of mods", "create", "read", "delete", "update", "add tag", "delete tag", "all mods with tag", "change minecraft version for mod", "change minecraft version for user", "ban mod", "shadow ban mod"]);
 ModDatabase db = new ModDatabase();
 
 db.Create("ExempleMod", "Exemple mod", "This is a exemple mod with open source code.\nYou can download and use my code for your mods.\nBy Mr. Coder", "Mr. Coder", new(TypeVersion.Release, 1, 0, 0), new(new(TypeVersion.Release, 1, 7, 0), new(TypeVersion.Release, 1, 7, 10)), true, 99, ["mr. coder", "coder", "open source"]);
 db.Create("AnotherMod", "Another mod", "This is a another mod.\nYou can download my mod but you can't use my code for your project.\nBy Mr. Coder", "Mr. Coder", new(TypeVersion.Alpha, 2, 25, 484), new(new(TypeVersion.Release, 1, 7, 0), new(TypeVersion.Release, 1, 7, 10)), true, 68, ["mr. coder", "coder"]);
 db.Create("SmallMod", "Very Small Mod", "This is my first mod!\nPlease play and enjoy!", "Ms. Coder", new(TypeVersion.Beta, 1, 8, 13), new(new(TypeVersion.Release, 1, 8, 0), new(TypeVersion.Release, 1, 8, 8)), true, 84, ["ms. coder", "coder"]);
 db.Create("BadMod", "Not a Mod", "", "AAA", new(TypeVersion.Alpha, 25, 25, 25), new(new(TypeVersion.Release, 1, 13, 0), new(TypeVersion.Release, 1, 16, 3)), false, -46, []);
-
-string InputExistIDOrEmptyString()
-{
-    Console.WriteLine(" ---[ (string) ID or empty string ]---");
-    string id;
-    while (true)
-    {
-        id = ConsoleUtils.InputString();
-        if (id == "")
-        {
-            break;
-        }
-        if (!db.IsCorrectID(id))
-        {
-            ConsoleUtils.Warn($"Incorrect id \"{id}\"!");
-            continue;
-        }
-        if (!db.IsExist(id))
-        {
-            ConsoleUtils.Warn($"Mod with id \"{id}\" is not exist!");
-            continue;
-        }
-        break;
-    }
-    Console.ForegroundColor = ConsoleColor.White;
-    Console.WriteLine(" ---------------------\n");
-    return id;
-}
 
 EntityVersion minecraftVersion = new(TypeVersion.Release, 1, 7, 10);
 
@@ -126,7 +98,7 @@ while (true)
                 {
                     ConsoleUtils.PrintMods(db, db.GetListOfIDMods(), minecraftVersion);
                     Console.WriteLine();
-                    string id = InputExistIDOrEmptyString();
+                    string id = ConsoleUtils.InputExistIDOrEmptyString(db);
                     if (id != "")
                     {
                         db.Read(id, out var mod);
@@ -138,7 +110,9 @@ while (true)
                 break;
             case 3: // delete
                 {
-                    string id = InputExistIDOrEmptyString();
+                    ConsoleUtils.PrintMods(db, db.GetListOfIDMods(), minecraftVersion);
+                    Console.WriteLine();
+                    string id = ConsoleUtils.InputExistIDOrEmptyString(db);
                     if (id != "")
                     {
                         db.Delete(id);
@@ -151,11 +125,22 @@ while (true)
                 break;
             case 4: // update
                 {
-                    string id = InputExistIDOrEmptyString();
+                    ConsoleUtils.PrintMods(db, db.GetListOfIDMods(), minecraftVersion);
+                    Console.WriteLine();
+                    string id = ConsoleUtils.InputExistIDOrEmptyString(db);
                     if (id != "")
                     {
                         db.Read(id, out var mod);
                         ConsoleUtils.PrintMod(mod);
+
+                        if ((ModStatus)mod["Status"] == ModStatus.Banned)
+                        {
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.Write("\n - Press Enter to continue... ");
+                            Console.ReadLine();
+                            continue;
+                        }
+
                         Console.ForegroundColor = ConsoleColor.White;
                         Console.WriteLine(" ---[ (string) NAME or empty space ]---");
                         var name = ConsoleUtils.InputStringOrNull();
@@ -188,9 +173,21 @@ while (true)
                 break;
             case 5: // add tag
                 {
-                    string id = InputExistIDOrEmptyString();
+                    ConsoleUtils.PrintMods(db, db.GetListOfIDMods(), minecraftVersion);
+                    Console.WriteLine();
+                    string id = ConsoleUtils.InputExistIDOrEmptyString(db);
                     if (id != "")
                     {
+                        db.CheckStatusMod(id, out ModStatus status);
+                        if (status == ModStatus.Banned)
+                        {
+                            ConsoleUtils.Warn("This mod is banned!");
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.Write("\n - Press Enter to continue... ");
+                            Console.ReadLine();
+                            continue;
+                        }
+                        
                         Console.WriteLine(" ---[ (string) TAG ]---");
                         var tag = ConsoleUtils.InputString();
                         switch (db.AddTag(id, tag))
@@ -210,10 +207,22 @@ while (true)
                 break;
             case 6: // delete from modpack
                 {
-                    string id = InputExistIDOrEmptyString();
+                    ConsoleUtils.PrintMods(db, db.GetListOfIDMods(), minecraftVersion);
+                    Console.WriteLine();
+                    string id = ConsoleUtils.InputExistIDOrEmptyString(db);
                     if (id != "")
                     {
-                        Console.WriteLine(" ---[ (string) MOD PACK ]---");
+                        db.CheckStatusMod(id, out ModStatus status);
+                        if (status == ModStatus.Banned)
+                        {
+                            ConsoleUtils.Warn("This mod is banned!");
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.Write("\n - Press Enter to continue... ");
+                            Console.ReadLine();
+                            continue;
+                        }
+
+                        Console.WriteLine(" ---[ (string) MOD TAGS ]---");
                         var tag = ConsoleUtils.InputString();
                         switch (db.RemoveTag(id, tag))
                         {
@@ -230,14 +239,14 @@ while (true)
                     Console.ReadLine();
                 }
                 break;
-            case 7: // all mods from modpack
+            case 7: // all mods with tags
                 {
-                    Console.WriteLine(" ---[ (string) MOD PACK ]---");
+                    Console.WriteLine(" ---[ (string) MOD TAGS ]---");
                     var modpack = ConsoleUtils.InputString();
                     switch (db.GetAllModsWithTag(modpack, out var mods))
                     {
                         case IsNotExistResult.IsNotExist:
-                            ConsoleUtils.Warn("This modpack is not exist!");
+                            ConsoleUtils.Warn("This tag is not exist!");
                             break;
                         case IsNotExistResult.Successful:
                             ConsoleUtils.PrintMods(db, mods, minecraftVersion);
@@ -250,30 +259,49 @@ while (true)
                 break;
             case 8: // change minecraft version for mod
                 {
-                    string id = InputExistIDOrEmptyString();
+                    ConsoleUtils.PrintMods(db, db.GetListOfIDMods(), minecraftVersion);
+                    Console.WriteLine();
+                    string id = ConsoleUtils.InputExistIDOrEmptyString(db);
                     Console.ForegroundColor = ConsoleColor.White;
                     if (id != "")
                     {
+                        db.CheckStatusMod(id, out ModStatus status);
+                        if (status == ModStatus.Banned)
+                        {
+                            ConsoleUtils.Warn("This mod is banned!");
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.Write("\n - Press Enter to continue... ");
+                            Console.ReadLine();
+                            continue;
+                        }
+
                         db.Read(id, out var data);
                         Console.WriteLine(" ---[ MINECRAFT VERSION ]---");
                         ConsoleUtils.Info($"Current version is [{data["MinecraftVersion"]}]!");
                         var a = ConsoleUtils.InputVersionOrNull();
                         var b = ConsoleUtils.InputVersionOrNull();
-                        a = a ?? ((MinecraftVersion)data["MinecraftVersion"]).First;
-                        b = b ?? ((MinecraftVersion)data["MinecraftVersion"]).Last;
+                        a = a ?? ((ModMinecraftVersion)data["MinecraftVersion"]).First;
+                        b = b ?? ((ModMinecraftVersion)data["MinecraftVersion"]).Last;
                         if (a > b)
                         {
                             var c = b;
                             b = a;
                             a = c;
                         }
-                        switch (db.ChangeMinecraftVersionForMod(id, new((EntityVersion)a, (EntityVersion)b)))
+                        switch (db.ChangeMinecraftVersionForMod(id, new((EntityVersion)a, (EntityVersion)b), out string newID))
                         {
                             case IsNotCorrectVersionResult.NoCorrectVersion:
                                 ConsoleUtils.Warn("You entered an older version than the current one!");
                                 break;
                             case IsNotCorrectVersionResult.Successful:
-                                ConsoleUtils.Info("Minecraft version for mod is changed!");
+                                if (newID == id)
+                                {
+                                    ConsoleUtils.Info("Minecraft version for mod is changed!");
+                                }
+                                else
+                                {
+                                    ConsoleUtils.Info($"Minecraft version for mod is changed! Also changed ID! New ID is [{newID}]");
+                                }
                                 break;
                         }
                         ;
@@ -291,6 +319,50 @@ while (true)
                     var v = ConsoleUtils.InputVersionOrNull();
                     Console.ForegroundColor = ConsoleColor.White;
                     minecraftVersion = v ?? minecraftVersion;
+                    Console.Write("\n - Press Enter to continue... ");
+                    Console.ReadLine();
+                }
+                break;
+            case 10: // ban mod
+                {
+                    ConsoleUtils.PrintMods(db, db.GetListOfIDMods(), minecraftVersion);
+                    Console.WriteLine();
+                    string id = ConsoleUtils.InputExistIDOrEmptyString(db);
+                    if (id != "")
+                    {
+                        switch (db.BanMod(id))
+                        {
+                            case IsBanResult.IsBan:
+                                ConsoleUtils.Warn("Mod is already banned!");
+                                break;
+                            case IsBanResult.Successful:
+                                ConsoleUtils.Info("Mod is banned!");
+                                break;
+                        }
+                    }
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write("\n - Press Enter to continue... ");
+                    Console.ReadLine();
+                }
+                break;
+            case 11: // shadowban mod
+                {
+                    ConsoleUtils.PrintMods(db, db.GetListOfIDMods(), minecraftVersion);
+                    Console.WriteLine();
+                    string id = ConsoleUtils.InputExistIDOrEmptyString(db);
+                    if (id != "")
+                    {
+                        switch (db.ShadowBan(id))
+                        {
+                            case IsBanResult.IsBan:
+                                ConsoleUtils.Warn("Mod is already shadow banned!");
+                                break;
+                            case IsBanResult.Successful:
+                                ConsoleUtils.Info("Mod is shadow banned!");
+                                break;
+                        }
+                    }
+                    Console.ForegroundColor = ConsoleColor.White;
                     Console.Write("\n - Press Enter to continue... ");
                     Console.ReadLine();
                 }

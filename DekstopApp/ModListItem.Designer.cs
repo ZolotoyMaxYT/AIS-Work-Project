@@ -40,7 +40,7 @@
             // 
             Title.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             Title.AutoSize = true;
-            Title.BackColor = SystemColors.ControlLightLight;
+            Title.BackColor = Color.Transparent;
             Title.Location = new Point(0, 0);
             Title.Margin = new Padding(0);
             Title.Name = "Title";
@@ -66,7 +66,6 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             tableLayoutPanel1.Size = new Size(394, 65);
             tableLayoutPanel1.TabIndex = 1;
-            tableLayoutPanel1.Paint += tableLayoutPanel1_Paint;
             // 
             // OpenButton
             // 
@@ -96,7 +95,7 @@
             // 
             Tags.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             Tags.AutoSize = true;
-            Tags.BackColor = SystemColors.Control;
+            Tags.BackColor = SystemColors.ScrollBar;
             Tags.Location = new Point(0, 32);
             Tags.Margin = new Padding(0);
             Tags.Name = "Tags";
@@ -109,7 +108,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = SystemColors.ControlLightLight;
+            BackColor = SystemColors.ControlLight;
             BorderStyle = BorderStyle.FixedSingle;
             Controls.Add(tableLayoutPanel1);
             Margin = new Padding(0, 3, 0, 3);

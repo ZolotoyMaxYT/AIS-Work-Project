@@ -48,9 +48,9 @@
             tableLayoutPanel2 = new TableLayoutPanel();
             MinecraftVersionFirstInput = new VersionInput();
             MinecraftVersionLastInput = new VersionInput();
+            label9 = new Label();
             tableLayoutPanel3 = new TableLayoutPanel();
             CreateButton = new Button();
-            label9 = new Label();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)RankInput).BeginInit();
             tableLayoutPanel2.SuspendLayout();
@@ -292,6 +292,17 @@
             MinecraftVersionLastInput.Size = new Size(262, 44);
             MinecraftVersionLastInput.TabIndex = 1;
             // 
+            // label9
+            // 
+            label9.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            label9.AutoSize = true;
+            label9.Location = new Point(3, 307);
+            label9.Name = "label9";
+            label9.Size = new Size(74, 50);
+            label9.TabIndex = 18;
+            label9.Text = "Minecraft version";
+            label9.TextAlign = ContentAlignment.MiddleCenter;
+            // 
             // tableLayoutPanel3
             // 
             tableLayoutPanel3.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
@@ -318,17 +329,6 @@
             CreateButton.Text = "Create";
             CreateButton.UseVisualStyleBackColor = true;
             CreateButton.Click += CreateButton_Click;
-            // 
-            // label9
-            // 
-            label9.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            label9.AutoSize = true;
-            label9.Location = new Point(3, 307);
-            label9.Name = "label9";
-            label9.Size = new Size(74, 50);
-            label9.TabIndex = 18;
-            label9.Text = "Minecraft version";
-            label9.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // NewModForm
             // 

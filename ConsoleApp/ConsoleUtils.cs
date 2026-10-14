@@ -3,59 +3,32 @@ using BussinesLogic;
 
 namespace ConsoleApp
 {
-    internal class ConsoleMenu
-    {
-        public string[] Options;
-        public int Index = 0;
-
-        public ConsoleMenu(string[] options)
-        {
-            Options = options;
-        }
-
-        public bool Update(out int index)
-        {
-            index = Index;
-            while (true)
-            {
-                var key = Console.ReadKey();
-                if (key.Key == ConsoleKey.UpArrow)
-                {
-                    Index = Math.Max(0, Index - 1);
-                    Thread.Sleep(100);
-                    return false;
-                }
-                if (key.Key == ConsoleKey.DownArrow)
-                {
-                    Index = Math.Min(Options.Length - 1, Index + 1);
-                    Thread.Sleep(100);
-                    return false;
-                }
-                if (key.Key == ConsoleKey.Enter) return true;
-            }
-        }
-        public void Print()
-        {
-            Console.ForegroundColor = ConsoleColor.White;
-            for (int i = 0; i < Options.Length; i++)
-            {
-                if (Index == i)
-                {
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.Write(" > ");
-                    Console.ForegroundColor = ConsoleColor.DarkGreen;
-                    Console.WriteLine(Options[i]);
-                    Console.ForegroundColor = ConsoleColor.White;
-                }
-                else
-                {
-                    Console.WriteLine($" * {Options[i]}");
-                }
-            }
-        }
-    }
     internal static class ConsoleUtils
     {
+        // Main
+        public static void Error(string message)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Write("[ERROR]: ");
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.WriteLine(message);
+        }
+        public static void Warn(string message)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write("[WARN]: ");
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine(message);
+        }
+        public static void Info(string message)
+        {
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.Write("[INFO]: ");
+            Console.ForegroundColor = ConsoleColor.DarkBlue;
+            Console.WriteLine(message);
+        }
+
+        // Utilities
         public static string GetString(bool condition, string ifTrue, string ifFalse)
         {
             return condition ? ifTrue : ifFalse;
@@ -70,7 +43,7 @@ namespace ConsoleApp
             return l;
         }
 
-
+        // Prints
         public static void Print(string lines)
         {
             if (lines.IsWhiteSpace())
@@ -99,11 +72,16 @@ namespace ConsoleApp
                 }
             }
         }
-
         public static void PrintMod(Dictionary<string, object> mod)
         {
             Console.WriteLine( "+---------------------");
-            Console.WriteLine($"| [{mod["Id"]}] {mod["Name"]}");
+            if ((ModStatus)mod["Status"] == ModStatus.Banned)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"| BANNED [{mod["Id"]}] {mod["Name"]}");
+                Console.ForegroundColor = ConsoleColor.White;
+            }   
+            else Console.WriteLine($"| [{mod["Id"]}] {mod["Name"]}");
             Console.WriteLine( "+-+-------------------");
             Print((string)mod["Description"]);
             Console.WriteLine( "+-+-------------------");
@@ -143,28 +121,7 @@ namespace ConsoleApp
             Console.WriteLine("----------------------");
         }
 
-        public static void Error(string message)
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.Write("[ERROR]: ");
-            Console.ForegroundColor = ConsoleColor.DarkRed;
-            Console.WriteLine(message);
-        }
-        public static void Warn(string message)
-        {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.Write("[WARN]: ");
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.WriteLine(message);
-        }
-        public static void Info(string message)
-        {
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.Write("[INFO]: ");
-            Console.ForegroundColor = ConsoleColor.DarkBlue;
-            Console.WriteLine(message);
-        }
-
+        // Inputs
         public static string InputString()
         {
             Console.ForegroundColor = ConsoleColor.Green;
@@ -358,6 +315,32 @@ namespace ConsoleApp
             Error("Incorrect data!\n * 1.0.0r, 1.0.0release -> v1.0.0 (release)\n * 1.0.0a, 1.0.0alpha -> v1.0.0 (alpha)\n * 1.0.0b, 1.0.0beta -> v1.0.0 (beta)\n");
             return InputVersionOrNull();
         }
-
+        public static string InputExistIDOrEmptyString(ModDatabase db)
+        {
+            Console.WriteLine(" ---[ (string) ID or empty string ]---");
+            string id;
+            while (true)
+            {
+                id = ConsoleUtils.InputString();
+                if (id == "")
+                {
+                    break;
+                }
+                if (!db.IsCorrectID(id))
+                {
+                    ConsoleUtils.Warn($"Incorrect id \"{id}\"!");
+                    continue;
+                }
+                if (!db.IsExist(id))
+                {
+                    ConsoleUtils.Warn($"Mod with id \"{id}\" is not exist!");
+                    continue;
+                }
+                break;
+            }
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine(" ---------------------\n");
+            return id;
+        }
     }
 }

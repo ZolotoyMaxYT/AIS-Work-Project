@@ -13,25 +13,25 @@ namespace DekstopApp
         public MainForm()
         {
             InitializeComponent();
-            Database.Create("ExempleMod", "Exemple mod",      
-                "This is an exemple mod for Minecraft Java!\nYou can use it to create your own mod.", 
-                "Mr. Coder", 
+            Database.Create("ExempleMod", "Exemple mod",
+                "This is an exemple mod for Minecraft Java!\nYou can use it to create your own mod.",
+                "Mr. Coder",
                 new(TypeVersion.Release, 1, 0, 0), new(new(TypeVersion.Release, 1, 7, 0), new(TypeVersion.Release, 1, 7, 10)), true, 100, ["coder pack", "mr coder", "open source"]);
-            Database.Create("SmallMod",     "Small mod",
-                "This is a very small mod for MinecraftJava! :D\nAnd... :p\nIt's my first mod! >w<", 
+            Database.Create("SmallMod", "Small mod",
+                "This is a very small mod for MinecraftJava! :D\nAnd... :p\nIt's my first mod! >w<",
                 "Ms. Coder",
                 new(TypeVersion.Alpha, 1, 36, 114), new(new(TypeVersion.Release, 1, 7, 0), new(TypeVersion.Release, 1, 7, 10)), true, 70, ["coder pack"]);
-            Database.Create("AnotherMod", "Another mod",      
-                "Another mod for Minecraft Java!\nPlay with your favorite monster!\nTime to play!", 
-                "Mr. Coder", 
+            Database.Create("AnotherMod", "Another mod",
+                "Another mod for Minecraft Java!\nPlay with your favorite monster!\nTime to play!",
+                "Mr. Coder",
                 new(TypeVersion.Beta, 25, 17, 231), new(new(TypeVersion.Release, 1, 8, 0), new(TypeVersion.Release, 1, 8, 8)), true, 135, ["coder pack", "mr coder"]);
-            Database.Create("VeryBadMod", "Very bad mod!", 
-                "DON'T DOWNLOAD THIS MOD!!!!\nIT DESTROY YOUR MINECRAFT!!!\nNEW 2.1.0 VERSION!!!!", 
-                "Mr. Virus", 
+            Database.Create("VeryBadMod", "Very bad mod!",
+                "DON'T DOWNLOAD THIS MOD!!!!\nIT DESTROY YOUR MINECRAFT!!!\nNEW 2.1.0 VERSION!!!!",
+                "Mr. Virus",
                 new(TypeVersion.Alpha, 2, 1, 0), new(new(TypeVersion.Release, 1, 13, 0), new(TypeVersion.Release, 1, 16, 2)), false, -5261, []);
             MenuUpdate();
-            ModList_SizeChange(null, new());
             SizeChanged += ModList_SizeChange;
+            MinecraftVersionButton.Text = $"Minecraft version is {MinecraftVersion} (click to change)";
         }
 
         public void MenuUpdate()
@@ -47,9 +47,17 @@ namespace DekstopApp
                 };
                 ModList.Controls.Add(a);
             }
+            ModList_SizeChange(null, new());
+        }
+
+        public void ModVersionUpdate()
+        {
+            MenuUpdate();
+            MinecraftVersionButton.Text = $"Minecraft version is {MinecraftVersion} (click to change)";
         }
 
         public ModDatabase Database = new();
+        public EntityVersion MinecraftVersion = new(TypeVersion.Release, 1, 7, 10);
 
         private void CreateButton_Click(object? sender, EventArgs e)
         {
@@ -67,6 +75,21 @@ namespace DekstopApp
             {
                 hiddenLabel.Width = ModList.Width - 10;
             }
+        }
+
+        private void MinecraftVersionButton_Click(object sender, EventArgs e)
+        {
+            new MinecraftVersionEdit(this).ShowDialog();
+        }
+
+        private void BanButton_Click(object sender, EventArgs e)
+        {
+            new BanForm(this, ModStatus.Banned).ShowDialog();
+        }
+
+        private void ShadowBanButton_Click(object sender, EventArgs e)
+        {
+            new BanForm(this, ModStatus.ShadowBanned).ShowDialog();
         }
     }
 }

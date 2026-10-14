@@ -17,12 +17,17 @@ namespace DekstopApp
             Title.Text = result;
             Mainform.Database.GetAllTags(mod, out string[] tags);
             Tags.Text = String.Join(", ", tags);
-        }
-        public ModListItem()
-        {
-            InitializeComponent();
-            Mod = null;
-            Mainform = null;
+            mainform.Database.IsCorrectForMinecraftVersion(mod, mainform.MinecraftVersion, out bool versionIsCorrect);
+            if (versionIsCorrect)
+            {
+                BackColor = SystemColors.ControlLightLight;
+                Tags.BackColor = SystemColors.Control;
+            }
+            else
+            {
+                BackColor = SystemColors.ControlLight;
+                Tags.BackColor = SystemColors.ScrollBar;
+            }
         }
 
         private void OpenButton_Click(object sender, EventArgs e)
@@ -34,11 +39,6 @@ namespace DekstopApp
         {
             Mainform.Database.Delete(Mod);
             Mainform.MenuUpdate();
-        }
-
-        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
-        {
-
         }
     }
 }
