@@ -38,7 +38,6 @@
             label5 = new Label();
             IDInput = new TextBox();
             DescriptionInput = new TextBox();
-            VersionInput = new VersionInput();
             TagsInput = new TextBox();
             label8 = new Label();
             label7 = new Label();
@@ -49,8 +48,10 @@
             MinecraftVersionFirstInput = new VersionInput();
             MinecraftVersionLastInput = new VersionInput();
             label9 = new Label();
+            VersionInput = new VersionInput();
             tableLayoutPanel3 = new TableLayoutPanel();
             CreateButton = new Button();
+            label10 = new Label();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)RankInput).BeginInit();
             tableLayoutPanel2.SuspendLayout();
@@ -72,7 +73,6 @@
             tableLayoutPanel1.Controls.Add(label5, 0, 4);
             tableLayoutPanel1.Controls.Add(IDInput, 1, 0);
             tableLayoutPanel1.Controls.Add(DescriptionInput, 1, 3);
-            tableLayoutPanel1.Controls.Add(VersionInput, 1, 4);
             tableLayoutPanel1.Controls.Add(TagsInput, 1, 8);
             tableLayoutPanel1.Controls.Add(label8, 0, 8);
             tableLayoutPanel1.Controls.Add(label7, 0, 7);
@@ -81,6 +81,7 @@
             tableLayoutPanel1.Controls.Add(IsJavaInput, 1, 6);
             tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 1, 5);
             tableLayoutPanel1.Controls.Add(label9, 0, 5);
+            tableLayoutPanel1.Controls.Add(VersionInput, 1, 4);
             tableLayoutPanel1.Location = new Point(3, 3);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 9;
@@ -187,14 +188,6 @@
             DescriptionInput.Size = new Size(530, 161);
             DescriptionInput.TabIndex = 14;
             // 
-            // VersionInput
-            // 
-            VersionInput.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            VersionInput.Location = new Point(83, 260);
-            VersionInput.Name = "VersionInput";
-            VersionInput.Size = new Size(530, 44);
-            VersionInput.TabIndex = 16;
-            // 
             // TagsInput
             // 
             TagsInput.AcceptsReturn = true;
@@ -265,31 +258,35 @@
             // tableLayoutPanel2
             // 
             tableLayoutPanel2.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            tableLayoutPanel2.ColumnCount = 2;
+            tableLayoutPanel2.ColumnCount = 3;
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel2.Controls.Add(MinecraftVersionFirstInput, 0, 0);
-            tableLayoutPanel2.Controls.Add(MinecraftVersionLastInput, 1, 0);
+            tableLayoutPanel2.Controls.Add(MinecraftVersionLastInput, 2, 0);
+            tableLayoutPanel2.Controls.Add(label10, 1, 0);
             tableLayoutPanel2.Location = new Point(80, 307);
             tableLayoutPanel2.Margin = new Padding(0);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
             tableLayoutPanel2.RowCount = 1;
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel2.Size = new Size(536, 50);
             tableLayoutPanel2.TabIndex = 17;
             // 
             // MinecraftVersionFirstInput
             // 
+            MinecraftVersionFirstInput.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             MinecraftVersionFirstInput.Location = new Point(3, 3);
             MinecraftVersionFirstInput.Name = "MinecraftVersionFirstInput";
-            MinecraftVersionFirstInput.Size = new Size(262, 44);
+            MinecraftVersionFirstInput.Size = new Size(252, 44);
             MinecraftVersionFirstInput.TabIndex = 0;
             // 
             // MinecraftVersionLastInput
             // 
-            MinecraftVersionLastInput.Location = new Point(271, 3);
+            MinecraftVersionLastInput.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            MinecraftVersionLastInput.Location = new Point(281, 3);
             MinecraftVersionLastInput.Name = "MinecraftVersionLastInput";
-            MinecraftVersionLastInput.Size = new Size(262, 44);
+            MinecraftVersionLastInput.Size = new Size(252, 44);
             MinecraftVersionLastInput.TabIndex = 1;
             // 
             // label9
@@ -302,6 +299,14 @@
             label9.TabIndex = 18;
             label9.Text = "Minecraft version";
             label9.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // VersionInput
+            // 
+            VersionInput.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            VersionInput.Location = new Point(83, 260);
+            VersionInput.Name = "VersionInput";
+            VersionInput.Size = new Size(530, 44);
+            VersionInput.TabIndex = 19;
             // 
             // tableLayoutPanel3
             // 
@@ -330,6 +335,18 @@
             CreateButton.UseVisualStyleBackColor = true;
             CreateButton.Click += CreateButton_Click;
             // 
+            // label10
+            // 
+            label10.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            label10.AutoSize = true;
+            label10.Font = new Font("Segoe UI Semibold", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 204);
+            label10.Location = new Point(261, 0);
+            label10.Name = "label10";
+            label10.Size = new Size(14, 50);
+            label10.TabIndex = 2;
+            label10.Text = "-";
+            label10.TextAlign = ContentAlignment.MiddleCenter;
+            // 
             // NewModForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -342,6 +359,7 @@
             tableLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)RankInput).EndInit();
             tableLayoutPanel2.ResumeLayout(false);
+            tableLayoutPanel2.PerformLayout();
             tableLayoutPanel3.ResumeLayout(false);
             ResumeLayout(false);
         }
@@ -366,10 +384,11 @@
         private TextBox DescriptionInput;
         private TableLayoutPanel tableLayoutPanel3;
         private Button CreateButton;
-        private VersionInput VersionInput;
         private TableLayoutPanel tableLayoutPanel2;
+        private Label label9;
         private VersionInput MinecraftVersionFirstInput;
         private VersionInput MinecraftVersionLastInput;
-        private Label label9;
+        private VersionInput VersionInput;
+        private Label label10;
     }
 }

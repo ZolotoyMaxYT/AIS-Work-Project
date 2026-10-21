@@ -1,25 +1,19 @@
-﻿namespace BussinesLogic
+﻿using DataAccessLayer;
+using Model;
+using System.Net.NetworkInformation;
+
+namespace BussinesLogic
 {
     
     public class ModDatabase
     {
         #region Base
-        private List<MinecraftMod> Database = new();
-        /// <summary>
-        /// Get index of mod
-        /// </summary>
-        /// <returns>index of mod or -1 if mod is not exist</returns>
-        private int GetIndexOf(string id)
+        private IRepository<MinecraftModRawData> Database;
+
+        public ModDatabase()
         {
-            var count = Database.Count;
-            for (int i = 0; i < count; i++)
-            {
-                if (Database[i].Id == id)
-                {
-                    return i;
-                }
-            }
-            return -1;
+            //Database = new EntityRepository();
+            Database = new DapperRepository();
         }
 
         /// <summary>
@@ -28,7 +22,7 @@
         /// <returns>list of mods</returns>
         private MinecraftMod[] GetListOfMods()
         {
-            return (from mod in Database select mod).ToArray();
+            return (from mod in Database.ReadAll() select mod.ToMinecraftMod()).ToArray();
         }
 
         /// <summary>
@@ -39,9 +33,9 @@
         {
             mod = null;
             if (!IsCorrectID(id)) return IsNotExistResult.NotID;
-            int find = GetIndexOf(id);
-            if (find == -1) return IsNotExistResult.IsNotExist;
-            mod = Database[find];
+            var find = Database.ReadByID(id);
+            if (find is null) return IsNotExistResult.IsNotExist;
+            mod = find.ToMinecraftMod();
             return IsNotExistResult.Successful;
         }
 
@@ -65,7 +59,7 @@
         /// <returns>true if mod is exist, false if not</returns>
         public bool IsExist(string id)
         {
-            return GetIndexOf(id) != -1;
+            return Database.IsExist(id);
         }
 
         /// <summary>
@@ -74,7 +68,7 @@
         /// <returns>list of mods' id</returns>
         public string[] GetFullListOfIDMods()
         {
-            return (from mod in Database select mod.Id).ToArray();
+            return (from mod in Database.ReadAll() select mod.Id).ToArray();
         }
 
         /// <summary>
@@ -83,7 +77,7 @@
         /// <returns>list of mods' id</returns>
         public string[] GetListOfIDMods()
         {
-            return (from mod in Database where mod.Status != ModStatus.ShadowBanned select mod.Id).ToArray();
+            return (from mod in Database.ReadAll() where mod.Status != ModStatus.ShadowBanned select mod.Id).ToArray();
         }
 
         /// <summary>
@@ -95,11 +89,9 @@
         public IsNotExistResult CheckStatusMod(string id, out ModStatus status)
         {
             status = ModStatus.Active;
-            if (!IsCorrectID(id)) return IsNotExistResult.NotID;
-            int find = GetIndexOf(id);
-            if (find == -1) return IsNotExistResult.IsNotExist;
-            status = Database[find].Status;
-            return IsNotExistResult.Successful;
+            var res = GetMod(id, out MinecraftMod mod);
+            if (res == IsNotExistResult.Successful) status = mod.Status;
+            return res;
         }
 
         /// <summary>
@@ -119,7 +111,7 @@
         {
             if (!IsCorrectID(id)) return IsExistResult.NotID;
             if (IsExist(id)) return IsExistResult.IsExist;
-            Database.Add(new(id, name, description, author, version, minecraftVersion, isJavaMod, rank, tags));
+            Database.Create(new MinecraftModRawData(new MinecraftMod(id, name, description, author, version, minecraftVersion, isJavaMod, rank, tags, ModStatus.Active)));
             return IsExistResult.Successful;
         }
 
@@ -131,10 +123,7 @@
         public IsNotExistResult Delete(string id)
         {
             if (!IsCorrectID(id)) return IsNotExistResult.NotID;
-            int find = GetIndexOf(id);
-            if (find == -1) return IsNotExistResult.IsNotExist;
-            Database.RemoveAt(find);
-            return IsNotExistResult.Successful;
+            return Database.Delete(id) ? IsNotExistResult.Successful : IsNotExistResult.IsNotExist;
         }
 
         /// <summary>
@@ -147,9 +136,9 @@
         {
             mod = null;
             if (!IsCorrectID(id)) return IsNotExistResult.NotID;
-            int find = GetIndexOf(id);
-            if (find == -1) return IsNotExistResult.IsNotExist;
-            mod = Database[find].ToJSON();
+            var data = Database.ReadByID(id);
+            if (data is null) return IsNotExistResult.IsNotExist;
+            mod = data.ToMinecraftMod().ToJSON();
             return IsNotExistResult.Successful;
         }
 
@@ -175,6 +164,7 @@
                 mod.Version = version ?? mod.Version;
                 mod.Rank = rank ?? mod.Rank;
                 mod.Tags = tags ?? mod.Tags;
+                Database.Update(new(mod));
                 return IsNotExistResult.Successful;
             }
             return IsNotExistResult.IsNotExist;
@@ -212,6 +202,7 @@
             {
                 if (mod.Tags.IndexOf(tag) != -1) return HasTagResult.HasTag;
                 mod.Tags.Add(tag);
+                Database.Update(new(mod));
                 return HasTagResult.Successful;
             }
             return HasTagResult.IsNotExist;
@@ -228,7 +219,11 @@
             if (!IsCorrectID(id)) return HasNotTagResult.NotID;
             if (GetMod(id, out MinecraftMod mod) == IsNotExistResult.Successful)
             {
-                if (mod.Tags.Remove(tag)) return HasNotTagResult.Successful;
+                if (mod.Tags.Remove(tag))
+                {
+                    Database.Update(new(mod));
+                    return HasNotTagResult.Successful;
+                }
                 return HasNotTagResult.HasNotTag;
             }
             return HasNotTagResult.IsNotExist;
@@ -242,13 +237,7 @@
         /// <returns>Status of work <see cref="IsNotExistResult"/></returns>
         public IsNotExistResult GetAllModsWithTag(string tag, out string[] mods)
         {
-            List<string> result = new();
-            for (int i = 0; i < Database.Count; i++)
-            {
-                var mod = Database[i];
-                if (mod.Status != ModStatus.ShadowBanned && mod.Tags.IndexOf(tag) != -1) result.Add(mod.Id);
-            }
-            mods = result.ToArray();
+            mods = (from mod in GetListOfMods() where mod.Status != ModStatus.ShadowBanned && mod.Tags.Contains(tag) select mod.Id).ToArray();
             if (mods.Length == 0) return IsNotExistResult.IsNotExist;
             return IsNotExistResult.Successful;
         }
@@ -281,10 +270,12 @@
         {
             result = "EMPTY";
             if (!IsCorrectID(id)) return IsNotExistResult.NotID;
-            int find = GetIndexOf(id);
-            if (find == -1) return IsNotExistResult.IsNotExist;
-            result = Database[find].ToString();
-            return IsNotExistResult.Successful;
+            if (GetMod(id, out MinecraftMod mod) == IsNotExistResult.Successful)
+            {
+                result = mod.ToString();
+                return IsNotExistResult.Successful;
+            }
+            return IsNotExistResult.IsNotExist;
         }
 
         /// <summary>
@@ -322,6 +313,11 @@
                 if (mod.MinecraftVersion.First > version.First || mod.MinecraftVersion.Last > version.Last) return IsNotCorrectVersionResult.NoCorrectVersion;
                 mod.MinecraftVersion = version;
                 string _id = MinecraftMod.FormatID(id, version.First);
+                if (_id == id)
+                {
+                    Database.Update(new(mod));
+                    return IsNotCorrectVersionResult.Successful;
+                }
                 string nid = _id;
                 int i = 1;
                 while (_id != id && IsExist(nid))
@@ -331,6 +327,8 @@
                 }
                 mod.Id = nid;
                 newId = nid;
+                Database.Delete(id);
+                Database.Create(new(mod));
                 return IsNotCorrectVersionResult.Successful;
             }
             return IsNotCorrectVersionResult.IsNotExist;
@@ -350,6 +348,7 @@
                 mod.Status = ModStatus.Banned;
                 mod.Description = "MOD WAS BANNED\nIF YOU DEVELOPER TRY CONTACT WITH US\nXXXXXXXX@gmail.com";
                 mod.Tags.Clear();
+                Database.Update(new(mod));
                 return IsBanResult.Successful;
             }
             return IsBanResult.IsNotExist;
@@ -367,6 +366,7 @@
             {
                 if (mod.Status == ModStatus.ShadowBanned) return IsBanResult.IsBan;
                 mod.Status = ModStatus.ShadowBanned;
+                Database.Update(new(mod));
                 return IsBanResult.Successful;
             }
             return IsBanResult.IsNotExist;

@@ -1,4 +1,5 @@
-﻿using BussinesLogic;
+﻿using Model;
+using BussinesLogic;
 
 namespace DekstopApp
 {

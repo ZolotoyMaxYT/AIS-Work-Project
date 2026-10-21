@@ -1,3 +1,4 @@
+using Model;
 using BussinesLogic;
 
 namespace DekstopApp
@@ -13,22 +14,6 @@ namespace DekstopApp
         public MainForm()
         {
             InitializeComponent();
-            Database.Create("ExempleMod", "Exemple mod",
-                "This is an exemple mod for Minecraft Java!\nYou can use it to create your own mod.",
-                "Mr. Coder",
-                new(TypeVersion.Release, 1, 0, 0), new(new(TypeVersion.Release, 1, 7, 0), new(TypeVersion.Release, 1, 7, 10)), true, 100, ["coder pack", "mr coder", "open source"]);
-            Database.Create("SmallMod", "Small mod",
-                "This is a very small mod for MinecraftJava! :D\nAnd... :p\nIt's my first mod! >w<",
-                "Ms. Coder",
-                new(TypeVersion.Alpha, 1, 36, 114), new(new(TypeVersion.Release, 1, 7, 0), new(TypeVersion.Release, 1, 7, 10)), true, 70, ["coder pack"]);
-            Database.Create("AnotherMod", "Another mod",
-                "Another mod for Minecraft Java!\nPlay with your favorite monster!\nTime to play!",
-                "Mr. Coder",
-                new(TypeVersion.Beta, 25, 17, 231), new(new(TypeVersion.Release, 1, 8, 0), new(TypeVersion.Release, 1, 8, 8)), true, 135, ["coder pack", "mr coder"]);
-            Database.Create("VeryBadMod", "Very bad mod!",
-                "DON'T DOWNLOAD THIS MOD!!!!\nIT DESTROY YOUR MINECRAFT!!!\nNEW 2.1.0 VERSION!!!!",
-                "Mr. Virus",
-                new(TypeVersion.Alpha, 2, 1, 0), new(new(TypeVersion.Release, 1, 13, 0), new(TypeVersion.Release, 1, 16, 2)), false, -5261, []);
             MenuUpdate();
             SizeChanged += ModList_SizeChange;
             MinecraftVersionButton.Text = $"Minecraft version is {MinecraftVersion} (click to change)";

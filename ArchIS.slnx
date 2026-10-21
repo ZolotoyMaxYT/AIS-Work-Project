@@ -1,8 +1,24 @@
 <Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+  </Configurations>
   <Folder Name="/Элементы решения/">
     <File Path="README.md" />
   </Folder>
-  <Project Path="BussinesLogic/BussinesLogic.csproj" />
-  <Project Path="ConsoleApp/ConsoleApp.csproj" />
-  <Project Path="DekstopApp/DekstopApp.csproj" />
+  <Project Path="BussinesLogic/BussinesLogic.csproj">
+    <Platform Solution="*|x64" Project="x64" />
+  </Project>
+  <Project Path="ConsoleApp/ConsoleApp.csproj">
+    <Platform Solution="*|x64" Project="x64" />
+  </Project>
+  <Project Path="DataAccessLayer/DataAccessLayer.csproj" Id="c050d03e-6db9-4222-a131-e0036809d7d0">
+    <Platform Solution="*|x64" Project="x64" />
+  </Project>
+  <Project Path="DekstopApp/DekstopApp.csproj">
+    <Platform Solution="*|x64" Project="x64" />
+  </Project>
+  <Project Path="Model/Model.csproj" Id="2ede12e5-3ce5-4625-ac83-043ab5ce817d">
+    <Platform Solution="*|x64" Project="x64" />
+  </Project>
 </Solution>

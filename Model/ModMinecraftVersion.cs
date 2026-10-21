@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BussinesLogic
+namespace Model
 {
     public struct ModMinecraftVersion
     {

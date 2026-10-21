@@ -1,13 +1,9 @@
-﻿using BussinesLogic;
+﻿using Model;
+using BussinesLogic;
 using ConsoleApp;
 
 ConsoleMenu menu = new(["list of mods", "create", "read", "delete", "update", "add tag", "delete tag", "all mods with tag", "change minecraft version for mod", "change minecraft version for user", "ban mod", "shadow ban mod"]);
 ModDatabase db = new ModDatabase();
-
-db.Create("ExempleMod", "Exemple mod", "This is a exemple mod with open source code.\nYou can download and use my code for your mods.\nBy Mr. Coder", "Mr. Coder", new(TypeVersion.Release, 1, 0, 0), new(new(TypeVersion.Release, 1, 7, 0), new(TypeVersion.Release, 1, 7, 10)), true, 99, ["mr. coder", "coder", "open source"]);
-db.Create("AnotherMod", "Another mod", "This is a another mod.\nYou can download my mod but you can't use my code for your project.\nBy Mr. Coder", "Mr. Coder", new(TypeVersion.Alpha, 2, 25, 484), new(new(TypeVersion.Release, 1, 7, 0), new(TypeVersion.Release, 1, 7, 10)), true, 68, ["mr. coder", "coder"]);
-db.Create("SmallMod", "Very Small Mod", "This is my first mod!\nPlease play and enjoy!", "Ms. Coder", new(TypeVersion.Beta, 1, 8, 13), new(new(TypeVersion.Release, 1, 8, 0), new(TypeVersion.Release, 1, 8, 8)), true, 84, ["ms. coder", "coder"]);
-db.Create("BadMod", "Not a Mod", "", "AAA", new(TypeVersion.Alpha, 25, 25, 25), new(new(TypeVersion.Release, 1, 13, 0), new(TypeVersion.Release, 1, 16, 3)), false, -46, []);
 
 EntityVersion minecraftVersion = new(TypeVersion.Release, 1, 7, 10);
 
@@ -278,7 +274,9 @@ while (true)
                         db.Read(id, out var data);
                         Console.WriteLine(" ---[ MINECRAFT VERSION ]---");
                         ConsoleUtils.Info($"Current version is [{data["MinecraftVersion"]}]!");
+                        ConsoleUtils.Info($"First");
                         var a = ConsoleUtils.InputVersionOrNull();
+                        ConsoleUtils.Info($"Last");
                         var b = ConsoleUtils.InputVersionOrNull();
                         a = a ?? ((ModMinecraftVersion)data["MinecraftVersion"]).First;
                         b = b ?? ((ModMinecraftVersion)data["MinecraftVersion"]).Last;

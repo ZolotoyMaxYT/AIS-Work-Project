@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using Model;
 using BussinesLogic;
 
 namespace DekstopApp
@@ -42,11 +43,6 @@ namespace DekstopApp
                     Close();
                     break;
             }
-        }
-
-        private void VersionButton_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

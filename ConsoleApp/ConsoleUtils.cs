@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+﻿using Model;
 using BussinesLogic;
 
 namespace ConsoleApp
@@ -231,44 +231,9 @@ namespace ConsoleApp
         }
         public static EntityVersion InputVersion()
         {
-            // [v]1.0.0[(]{alpha|a, beta|b, release|r}[)]
-            // v1.0.0 (alpha)
-            // v1.0.0 beta
-            // 1.0.0a
-            string text = InputString().ToLower().Replace(" ", "").Replace("(", "").Replace(")", "");
-            if (text[0] == 'v') text = text.Substring(1);
-            string[] args = text.Split('.');
-            if (args.Length == 3 && int.TryParse(args[0], out int a) && int.TryParse(args[1], out int b))
+            if (EntityVersion.TryParse(InputString(), out EntityVersion version))
             {
-                text = "";
-                var regex = new Regex(@"[^0-9]");
-                for (int i = 0; i < args[2].Length; i++)
-                {
-                    text += args[2][i];
-                    if (regex.Match(text).Success)
-                    {
-                        if (int.TryParse(text.Substring(0, text.Length - 1), out int c))
-                        {
-                            text = args[2].Substring(text.Length - 1);
-                            switch (text)
-                            {
-                                case "r":
-                                case "release":
-                                    return new EntityVersion(TypeVersion.Release, a, b, c);
-                                case "b":
-                                case "beta":
-                                    return new EntityVersion(TypeVersion.Beta, a, b, c);
-                                case "a":
-                                case "alpha":
-                                    return new EntityVersion(TypeVersion.Alpha, a, b, c);
-                            }
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                }
+                return version;
             }
             Error("Incorrect data!\n * 1.0.0r, 1.0.0release -> v1.0.0 (release)\n * 1.0.0a, 1.0.0alpha -> v1.0.0 (alpha)\n * 1.0.0b, 1.0.0beta -> v1.0.0 (beta)\n");
             return InputVersion();
@@ -277,40 +242,9 @@ namespace ConsoleApp
         {
             string text = InputString();
             if (text.Length == 0 || text.IsWhiteSpace()) return null;
-            text = text.ToLower().Replace(" ", "").Replace("(", "").Replace(")", "");
-            if (text[0] == 'v') text = text.Substring(1);
-            string[] args = text.Split('.');
-            if (args.Length == 3 && int.TryParse(args[0], out int a) && int.TryParse(args[1], out int b))
+            if (EntityVersion.TryParse(text, out EntityVersion version))
             {
-                text = "";
-                var regex = new Regex(@"[^0-9]");
-                for (int i = 0; i < args[2].Length; i++)
-                {
-                    text += args[2][i];
-                    if (regex.Match(text).Success)
-                    {
-                        if (int.TryParse(text.Substring(0, text.Length - 1), out int c))
-                        {
-                            text = args[2].Substring(text.Length - 1);
-                            switch (text)
-                            {
-                                case "r":
-                                case "release":
-                                    return new EntityVersion(TypeVersion.Release, a, b, c);
-                                case "b":
-                                case "beta":
-                                    return new EntityVersion(TypeVersion.Beta, a, b, c);
-                                case "a":
-                                case "alpha":
-                                    return new EntityVersion(TypeVersion.Alpha, a, b, c);
-                            }
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                }
+                return version;
             }
             Error("Incorrect data!\n * 1.0.0r, 1.0.0release -> v1.0.0 (release)\n * 1.0.0a, 1.0.0alpha -> v1.0.0 (alpha)\n * 1.0.0b, 1.0.0beta -> v1.0.0 (beta)\n");
             return InputVersionOrNull();

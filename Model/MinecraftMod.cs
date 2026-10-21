@@ -1,23 +1,26 @@
-﻿namespace BussinesLogic
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Model
 {
     public class MinecraftMod
     {
-        public string Id;
+        public string Id { get; set; }
         public string Name;
         public string Description;
         public string Author;
+
         public EntityVersion Version;
         public ModMinecraftVersion MinecraftVersion;
         /// <summary>
         /// true is java, false is bedrock
         /// </summary>
         public bool IsJavaMod;
-        public int Rank;
+        public int Rank = 0;
         public List<string> Tags;
-        public ModStatus Status;
+        public ModStatus Status = ModStatus.Active;
         
 
-        public MinecraftMod(string id, string name, string description, string author, EntityVersion version, ModMinecraftVersion minecraftVersion, bool isJavaMod, int rank, List<string> tags)
+        public MinecraftMod(string id, string name, string description, string author, EntityVersion version, ModMinecraftVersion minecraftVersion, bool isJavaMod, int rank, List<string> tags, ModStatus status)
         {
             Id = FormatID(id ,minecraftVersion.First);
             Name = name; 
@@ -28,7 +31,7 @@
             IsJavaMod = isJavaMod; 
             Rank = rank;
             Tags = tags;
-            Status = ModStatus.Active;
+            Status = status;
         }
 
         public override string ToString()
