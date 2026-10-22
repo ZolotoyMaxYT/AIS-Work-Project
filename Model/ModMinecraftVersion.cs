@@ -35,12 +35,12 @@ namespace Model
 
         public static EntityVersion GetCorrectLastVersion(EntityVersion first, EntityVersion last)
         {
-            // first is [1.8.0r; 1.13.0r)   ->   last is [1.8.0r; 1.13.0r)
-            if (first >= new EntityVersion(TypeVersion.Release, 1, 8, 0) && first < new EntityVersion(TypeVersion.Release, 1, 13, 0) && last >= new EntityVersion(TypeVersion.Release, 1, 13, 0))
-                return new EntityVersion(TypeVersion.Release, 1, 12, 100);
-            // first is [x; 1.8.0r)   ->   last is [x; 1.8.0r)
-            if (first < new EntityVersion(TypeVersion.Release, 1, 8, 0) && last >= new EntityVersion(TypeVersion.Release, 1, 8, 0))
-                return new EntityVersion(TypeVersion.Release, 1, 7, 10);
+            // [1.0.0a; 1.0.0b)
+            if (first < new EntityVersion(TypeVersion.Beta, 1, 0, 0) && last >= new EntityVersion(TypeVersion.Beta, 1, 0, 0))
+                return new EntityVersion(TypeVersion.Alpha, 1, 100, 100);
+            // [1.0.0b; 1.0.0r)
+            if (first < new EntityVersion(TypeVersion.Release, 1, 0, 0) && last >= new EntityVersion(TypeVersion.Release, 1, 0, 0))
+                return new EntityVersion(TypeVersion.Beta, 1, 100, 100);
             // fine
             return last;
         }
