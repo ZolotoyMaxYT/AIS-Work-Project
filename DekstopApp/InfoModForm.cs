@@ -20,7 +20,7 @@ namespace DekstopApp
             VersionText.Text = mod["Version"].ToString();
             MinecraftVersionText.Text = mod["MinecraftVersion"].ToString();
             DescriptionText.Text = ((string)mod["Description"]).Replace("\n", Environment.NewLine);
-            TagsText.Text = string.Join(Environment.NewLine, (List<string>)mod["Tags"]);
+            TagsText.Text = string.Join(Environment.NewLine, (string[])mod["Tags"]);
 
             Mainform.Database.CheckStatusMod(Mod, out ModStatus status);
             if (status == ModStatus.Banned)

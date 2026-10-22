@@ -8,7 +8,7 @@ namespace BussinesLogic
     public class ModDatabase
     {
         #region Base
-        private IRepository<MinecraftModRawData> Database;
+        private IRepository<MinecraftMod> Database;
 
         public ModDatabase()
         {
@@ -22,7 +22,7 @@ namespace BussinesLogic
         /// <returns>list of mods</returns>
         private MinecraftMod[] GetListOfMods()
         {
-            return (from mod in Database.ReadAll() select mod.ToMinecraftMod()).ToArray();
+            return (from mod in Database.ReadAll() select mod).ToArray();
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace BussinesLogic
             if (!IsCorrectID(id)) return IsNotExistResult.NotID;
             var find = Database.ReadByID(id);
             if (find is null) return IsNotExistResult.IsNotExist;
-            mod = find.ToMinecraftMod();
+            mod = find;
             return IsNotExistResult.Successful;
         }
 
@@ -110,9 +110,7 @@ namespace BussinesLogic
         public IsExistResult Create(string id, string name, string description, string author, EntityVersion version, ModMinecraftVersion minecraftVersion, bool isJavaMod, int rank, List<string> tags)
         {
             if (!IsCorrectID(id)) return IsExistResult.NotID;
-            if (IsExist(id)) return IsExistResult.IsExist;
-            Database.Create(new MinecraftModRawData(new MinecraftMod(id, name, description, author, version, minecraftVersion, isJavaMod, rank, tags, ModStatus.Active)));
-            return IsExistResult.Successful;
+            return Database.Create(new MinecraftMod(id, name, description, author, version, minecraftVersion, isJavaMod, rank, tags, ModStatus.Active)) ? IsExistResult.Successful : IsExistResult.IsExist;
         }
 
         /// <summary>
@@ -138,7 +136,7 @@ namespace BussinesLogic
             if (!IsCorrectID(id)) return IsNotExistResult.NotID;
             var data = Database.ReadByID(id);
             if (data is null) return IsNotExistResult.IsNotExist;
-            mod = data.ToMinecraftMod().ToJSON();
+            mod = data.ToJSON();
             return IsNotExistResult.Successful;
         }
 
@@ -161,10 +159,10 @@ namespace BussinesLogic
                 mod.Name = name ?? mod.Name;
                 mod.Description = description ?? mod.Description;
                 mod.Author = author ?? mod.Author;
-                mod.Version = version ?? mod.Version;
+                if (version is not null) mod.SetVersion((EntityVersion)version);
                 mod.Rank = rank ?? mod.Rank;
-                mod.Tags = tags ?? mod.Tags;
-                Database.Update(new(mod));
+                if (tags is not null) mod.Tags = string.Join('\n', tags);
+                Database.Update(mod);
                 return IsNotExistResult.Successful;
             }
             return IsNotExistResult.IsNotExist;
@@ -183,7 +181,8 @@ namespace BussinesLogic
             if (!IsCorrectID(id)) return IsNotExistResult.NotID;
             if (GetMod(id, out MinecraftMod mod) == IsNotExistResult.Successful)
             {
-                if (mod.Tags.IndexOf(tag) != -1) result = true;
+                string[] tags = mod.Tags.Split('\n');
+                if (tags.IndexOf(tag) != -1) result = true;
                 return IsNotExistResult.Successful;
             }
             return IsNotExistResult.IsNotExist;
@@ -200,9 +199,11 @@ namespace BussinesLogic
             if (!IsCorrectID(id)) return HasTagResult.NotID;
             if (GetMod(id, out MinecraftMod mod) == IsNotExistResult.Successful)
             {
-                if (mod.Tags.IndexOf(tag) != -1) return HasTagResult.HasTag;
-                mod.Tags.Add(tag);
-                Database.Update(new(mod));
+                List<string> tags = mod.Tags.Split('\n').ToList();
+                if (tags.IndexOf(tag) != -1) return HasTagResult.HasTag;
+                tags.Add(tag);
+                mod.Tags = string.Join('\n', tags);
+                Database.Update(mod);
                 return HasTagResult.Successful;
             }
             return HasTagResult.IsNotExist;
@@ -219,9 +220,11 @@ namespace BussinesLogic
             if (!IsCorrectID(id)) return HasNotTagResult.NotID;
             if (GetMod(id, out MinecraftMod mod) == IsNotExistResult.Successful)
             {
-                if (mod.Tags.Remove(tag))
+                List<string> tags = mod.Tags.Split('\n').ToList();
+                if (tags.Remove(tag))
                 {
-                    Database.Update(new(mod));
+                    mod.Tags = string.Join('\n', tags);
+                    Database.Update(mod);
                     return HasNotTagResult.Successful;
                 }
                 return HasNotTagResult.HasNotTag;
@@ -237,7 +240,7 @@ namespace BussinesLogic
         /// <returns>Status of work <see cref="IsNotExistResult"/></returns>
         public IsNotExistResult GetAllModsWithTag(string tag, out string[] mods)
         {
-            mods = (from mod in GetListOfMods() where mod.Status != ModStatus.ShadowBanned && mod.Tags.Contains(tag) select mod.Id).ToArray();
+            mods = (from mod in GetListOfMods() where mod.Status != ModStatus.ShadowBanned && mod.Tags.Split('\n').Contains(tag) select mod.Id).ToArray();
             if (mods.Length == 0) return IsNotExistResult.IsNotExist;
             return IsNotExistResult.Successful;
         }
@@ -254,7 +257,7 @@ namespace BussinesLogic
             if (!IsCorrectID(id)) return IsNotExistResult.NotID;
             if (GetMod(id, out MinecraftMod mod) == IsNotExistResult.Successful)
             {
-                result = mod.Tags.ToArray();
+                result = mod.Tags.Split('\n').ToArray();
                 return IsNotExistResult.Successful;
             }
             return IsNotExistResult.IsNotExist;
@@ -291,7 +294,8 @@ namespace BussinesLogic
             if (!IsCorrectID(id)) return IsNotExistResult.NotID;
             if (GetMod(id, out MinecraftMod mod) == IsNotExistResult.Successful)
             {
-                result = mod.MinecraftVersion.First <= version && mod.MinecraftVersion.Last >= version;
+                var mver = mod.GetMinecraftVersion();
+                result = mver.First <= version && mver.Last >= version;
                 return IsNotExistResult.Successful;
             }
             return IsNotExistResult.IsNotExist;
@@ -310,12 +314,13 @@ namespace BussinesLogic
             if (!IsCorrectID(id)) return IsNotCorrectVersionResult.NotID;
             if (GetMod(id, out MinecraftMod mod) == IsNotExistResult.Successful)
             {
-                if (mod.MinecraftVersion.First > version.First || mod.MinecraftVersion.Last > version.Last) return IsNotCorrectVersionResult.NoCorrectVersion;
-                mod.MinecraftVersion = version;
+                var mver = mod.GetMinecraftVersion();
+                if (mver.First > version.First || mver.Last > version.Last) return IsNotCorrectVersionResult.NoCorrectVersion;
+                mod.SetMinecraftVersion(version);
                 string _id = MinecraftMod.FormatID(id, version.First);
                 if (_id == id)
                 {
-                    Database.Update(new(mod));
+                    Database.Update(mod);
                     return IsNotCorrectVersionResult.Successful;
                 }
                 string nid = _id;
@@ -328,7 +333,7 @@ namespace BussinesLogic
                 mod.Id = nid;
                 newId = nid;
                 Database.Delete(id);
-                Database.Create(new(mod));
+                Database.Create(mod);
                 return IsNotCorrectVersionResult.Successful;
             }
             return IsNotCorrectVersionResult.IsNotExist;
@@ -347,8 +352,8 @@ namespace BussinesLogic
                 if (mod.Status == ModStatus.Banned) return IsBanResult.IsBan;
                 mod.Status = ModStatus.Banned;
                 mod.Description = "MOD WAS BANNED\nIF YOU DEVELOPER TRY CONTACT WITH US\nXXXXXXXX@gmail.com";
-                mod.Tags.Clear();
-                Database.Update(new(mod));
+                mod.Tags = "";
+                Database.Update(mod);
                 return IsBanResult.Successful;
             }
             return IsBanResult.IsNotExist;
@@ -366,7 +371,7 @@ namespace BussinesLogic
             {
                 if (mod.Status == ModStatus.ShadowBanned) return IsBanResult.IsBan;
                 mod.Status = ModStatus.ShadowBanned;
-                Database.Update(new(mod));
+                Database.Update(mod);
                 return IsBanResult.Successful;
             }
             return IsBanResult.IsNotExist;

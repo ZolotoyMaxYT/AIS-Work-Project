@@ -58,9 +58,9 @@ namespace ConsoleApp
                 }
             }
         }
-        public static void Print(List<string> list)
+        public static void Print(string[] list)
         {
-            if (list.Count == 0)
+            if (list.Length == 0)
             {
                 Console.WriteLine("| | EMPTY");
             }
@@ -93,7 +93,7 @@ namespace ConsoleApp
             Console.WriteLine( "+-+-------------------");
             Console.WriteLine( "| Tags");
             Console.WriteLine( "+-+-------------------");
-            Print((List<string>)mod["Tags"]);
+            Print((string[])mod["Tags"]);
             Console.WriteLine($"+---------------------");
         }
         public static void PrintMods(ModDatabase db, string[] mods, EntityVersion minecraftVersion)

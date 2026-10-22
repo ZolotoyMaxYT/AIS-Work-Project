@@ -25,7 +25,7 @@ namespace DekstopApp
             VersionTypeInput.SelectedIndex = (int)((EntityVersion)data["Version"]).Type;
             TypeText.Text = (bool)data["IsJavaMod"] ? "Java mod" : "Bedrock mod";
             RankInput.Value = (int)data["Rank"];
-            TagsInput.Text = String.Join(Environment.NewLine, (List<string>)data["Tags"]);
+            TagsInput.Text = String.Join(Environment.NewLine, (string[])data["Tags"]);
         }
 
         private void UpdateButton_Click(object sender, EventArgs e)

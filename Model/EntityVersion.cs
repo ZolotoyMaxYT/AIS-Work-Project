@@ -24,6 +24,10 @@ namespace Model
         {
             return $"v{A}.{B}.{C} ({Type})";
         }
+        public static string ToString(TypeVersion type, int a, int b, int c)
+        {
+            return $"v{a}.{b}.{c} ({type})";
+        }
 
         public static bool operator ==(EntityVersion x, EntityVersion y)
         {

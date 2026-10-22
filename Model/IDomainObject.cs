@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DataAccessLayer
+namespace Model
 {
     public interface IDomainObject
     {

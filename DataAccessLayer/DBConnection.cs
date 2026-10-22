@@ -29,12 +29,16 @@ namespace DataAccessLayer
                 con.Open();
                 SQLiteCommand cmd = new SQLiteCommand("CREATE TABLE IF NOT EXISTS Records ("+
                     /* ID, Name, Description, Author */ "Id text primary key, Name text, Description text, Author text, " +
-                    /* Version,  MinecraftVersionFirst, MinecraftVersionLast */ "Version text, MinecraftVersionFirst text, MinecraftVersionLast text, " +
+                    /* Version */ GetVersionSQL("Version") +
+                    /* MinecraftVersionFirst */ GetVersionSQL("MinecraftVersionFirst") +
+                    /* MinecraftVersionLast */ GetVersionSQL("MinecraftVersionLast") +
                     /* IsJavaMod, Rank, Tags, Status */ "IsJavaMod integer not null, Rank integer not null, Tags text, Status integer not null" + 
                     ")", con);
                 cmd.ExecuteNonQuery();
             }
             ready = true;
         }
+
+        private static string GetVersionSQL(string name) => $"{name}A integer not null, {name}B integer not null, {name}C integer not null, {name}Type integer not null, ";
     }
 }

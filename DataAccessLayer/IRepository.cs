@@ -8,7 +8,7 @@ namespace DataAccessLayer
         public bool Update(T entity);
         public bool Delete(string id);
         public bool IsExist(string id);
-        public List<T> ReadAll();
+        public T[] ReadAll();
         public T? ReadByID(string id);
     }
 }

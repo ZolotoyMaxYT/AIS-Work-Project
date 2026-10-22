@@ -6,7 +6,7 @@ namespace DataAccessLayer
     /// <summary>
     /// Репозиторий через Entity Framework.
     /// </summary>
-    public class EntityRepository : IRepository<MinecraftModRawData>
+    public class EntityRepository : IRepository<MinecraftMod>
     {
         public EntityRepository()
         {
@@ -14,71 +14,85 @@ namespace DataAccessLayer
         }
 
         /// <summary>
-        /// Добавляет объект в базу.
+        /// Добавляет новую запись в базу с уникальным ID.
+        /// <param name="entity">данные для записи</param>
+        /// <returns>true - если успешно, иначе - false</returns>
         /// </summary>
-        public bool Create(MinecraftModRawData entity)
+        public bool Create(MinecraftMod entity)
         {
             if (entity == null || IsExist(entity.Id)) return false;
             using (DataContext db = new())
             {
-                db.Set<MinecraftModRawData>().Add(entity);
+                db.Set<MinecraftMod>().Add(entity);
                 return db.SaveChanges() > 0;
             }
         }
 
         /// <summary>
-        /// Удаляет объект с указанным ID.
+        /// Удаляет запись с указанным ID.
+        /// <param name="id">ID записи</param>
+        /// <returns>true - если успешно, иначе - false</returns>
         /// </summary>
         public bool Delete(string id)
         {
             using (DataContext db = new())
             {
-                MinecraftModRawData entity = db.Set<MinecraftModRawData>().Find(id);
+                MinecraftMod entity = db.Set<MinecraftMod>().Find(id);
                 if (entity == null) return false;
-                db.Set<MinecraftModRawData>().Remove(entity);
+                db.Set<MinecraftMod>().Remove(entity);
                 return db.SaveChanges() > 0;
             }
         }
 
+        /// <summary>
+        /// Проверить, существует ли запись с указанным ID.
+        /// </summary>
+        /// <param name="id">ID записи</param>
+        /// <returns>true - если существует, иначе - false</returns>
         public bool IsExist(string id)
         {
             using (DataContext db = new())
             {
-                return db.MinecraftMods.Any(e => e.Id == id);
+                return db.Set<MinecraftMod>().Any(e => e.Id == id);
             }
         }
 
         /// <summary>
-        /// Возвращает все объекты.
+        /// Возвращает все записи.
+        /// <returns>Список всех записей</returns>
         /// </summary>
-        public List<MinecraftModRawData> ReadAll()
+        public MinecraftMod[] ReadAll()
         {
             using (DataContext db = new())
             {
-                return db.Set<MinecraftModRawData>().ToList();
+                return db.Set<MinecraftMod>().ToArray();
             }
         }
 
         /// <summary>
-        /// Возвращает объект с указанным ID или null.
+        /// Возвращает запись с указанным ID или null.
+        /// <param name="id">ID записи</param>
+        /// <returns>Найденная запись или null</returns>
         /// </summary>
-        public MinecraftModRawData? ReadByID(string id)
+        public MinecraftMod? ReadByID(string id)
         {
             using (DataContext db = new())
             {
-                return db.Set<MinecraftModRawData>().Find(id);
+                return db.Set<MinecraftMod>().Find(id);
             }
         }
 
         /// <summary>
-        /// Сохраняет изменения объекта.
+        /// Сохраняет изменения записи.
+        /// <param name="entity">данные для записи</param>
+        /// <returns>true - если успешно, иначе - false</returns>
         /// </summary>
-        public bool Update(MinecraftModRawData entity)
+        public bool Update(MinecraftMod entity)
         {
             if (entity == null) return false;
             using (DataContext db = new())
             {
-                MinecraftModRawData e = db.Set<MinecraftModRawData>().Find(entity.Id);
+                MinecraftMod e = db.Set<MinecraftMod>().Find(entity.Id);
                 if (e == null) return false;
                 db.Entry(e).CurrentValues.SetValues(entity);
                 db.SaveChanges();

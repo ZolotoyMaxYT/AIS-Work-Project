@@ -28,6 +28,10 @@ namespace Model
         {
             return $"{First} - {Last}";
         }
+        public static string ToString(TypeVersion ftype, int fa, int fb, int fc, TypeVersion ltype, int la, int lb, int lc)
+        {
+            return $"{EntityVersion.ToString(ftype, fa, fb, fc)} - {EntityVersion.ToString(ltype, la, lb, lc)}";
+        }
 
         public static EntityVersion GetCorrectLastVersion(EntityVersion first, EntityVersion last)
         {
