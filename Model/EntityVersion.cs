@@ -24,10 +24,6 @@ namespace Model
         {
             return $"v{A}.{B}.{C} ({Type})";
         }
-        public static string ToString(TypeVersion type, int a, int b, int c)
-        {
-            return $"v{a}.{b}.{c} ({type})";
-        }
 
         public static bool operator ==(EntityVersion x, EntityVersion y)
         {
@@ -109,12 +105,11 @@ namespace Model
                                 case "alpha":
                                     result = new EntityVersion(TypeVersion.Alpha, a, b, c);
                                     return true;
+                                default:
+                                    return false;
                             }
                         }
-                        else
-                        {
-                            break;
-                        }
+                        else return false;
                     }
                 }
             }

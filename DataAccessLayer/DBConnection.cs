@@ -20,8 +20,7 @@ namespace DataAccessLayer
         /// </summary>
         public static void CreateTable()
         {
-            if (ready)
-                return;
+            if (ready) return;
 
             Directory.CreateDirectory(folder);
             using (SQLiteConnection con = new SQLiteConnection(str))

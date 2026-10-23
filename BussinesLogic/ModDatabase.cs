@@ -1,6 +1,5 @@
 ﻿using DataAccessLayer;
 using Model;
-using System.Net.NetworkInformation;
 
 namespace BussinesLogic
 {
@@ -159,7 +158,7 @@ namespace BussinesLogic
                 mod.Name = name ?? mod.Name;
                 mod.Description = description ?? mod.Description;
                 mod.Author = author ?? mod.Author;
-                if (version is not null) mod.SetVersion((EntityVersion)version);
+                mod.Version = version ?? mod.Version;
                 mod.Rank = rank ?? mod.Rank;
                 if (tags is not null) mod.Tags = string.Join('\n', tags);
                 Database.Update(mod);
@@ -294,8 +293,7 @@ namespace BussinesLogic
             if (!IsCorrectID(id)) return IsNotExistResult.NotID;
             if (GetMod(id, out MinecraftMod mod) == IsNotExistResult.Successful)
             {
-                var mver = mod.GetMinecraftVersion();
-                result = mver.First <= version && mver.Last >= version;
+                result = mod.MinecraftVersion.First <= version && mod.MinecraftVersion.Last >= version;
                 return IsNotExistResult.Successful;
             }
             return IsNotExistResult.IsNotExist;
@@ -314,9 +312,8 @@ namespace BussinesLogic
             if (!IsCorrectID(id)) return IsNotCorrectVersionResult.NotID;
             if (GetMod(id, out MinecraftMod mod) == IsNotExistResult.Successful)
             {
-                var mver = mod.GetMinecraftVersion();
-                if (mver.First > version.First || mver.Last > version.Last) return IsNotCorrectVersionResult.NoCorrectVersion;
-                mod.SetMinecraftVersion(version);
+                if (mod.MinecraftVersion.First > version.First || mod.MinecraftVersion.Last > version.Last) return IsNotCorrectVersionResult.NoCorrectVersion;
+                mod.MinecraftVersion = version;
                 string _id = MinecraftMod.FormatID(id, version.First);
                 if (_id == id)
                 {

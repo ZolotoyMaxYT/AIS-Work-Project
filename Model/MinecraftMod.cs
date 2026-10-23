@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Model
+﻿namespace Model
 {
     public class MinecraftMod : IDomainObject
     {
@@ -10,24 +8,74 @@ namespace Model
         public string Author { get; set; } = "[NO NAME]";
 
         #region Version
-        public int VersionA { get; set; } = 1;
-        public int VersionB { get; set; } = 0;
-        public int VersionC { get; set; } = 0;
-        public TypeVersion VersionType { get; set; } = TypeVersion.Alpha;
+        public EntityVersion Version = new(TypeVersion.Alpha, 1, 0, 0);
+        public int VersionA 
+        {
+            get => Version.A; 
+            set => Version.A = value; 
+        }
+        public int VersionB
+        {
+            get => Version.B;
+            set => Version.B = value;
+        }
+        public int VersionC
+        {
+            get => Version.C;
+            set => Version.C = value;
+        }
+        public TypeVersion VersionType
+        {
+            get => Version.Type;
+            set => Version.Type = value;
+        }
         #endregion
 
+        public ModMinecraftVersion MinecraftVersion = new(new(TypeVersion.Alpha, 1, 0, 0), new(TypeVersion.Alpha, 1, 0, 0));
         #region MinecraftVersionFirst
-        public int MinecraftVersionFirstA { get; set; } = 1;
-        public int MinecraftVersionFirstB { get; set; } = 0;
-        public int MinecraftVersionFirstC { get; set; } = 0;
-        public TypeVersion MinecraftVersionFirstType { get; set; } = TypeVersion.Alpha;
+        public int MinecraftVersionFirstA
+        {
+            get => MinecraftVersion.First.A;
+            set => MinecraftVersion.First.A = value;
+        }
+        public int MinecraftVersionFirstB
+        {
+            get => MinecraftVersion.First.B;
+            set => MinecraftVersion.First.B = value;
+        }
+        public int MinecraftVersionFirstC
+        {
+            get => MinecraftVersion.First.C;
+            set => MinecraftVersion.First.C = value;
+        }
+        public TypeVersion MinecraftVersionFirstType
+        {
+            get => MinecraftVersion.First.Type;
+            set => MinecraftVersion.First.Type = value;
+        }
         #endregion
 
         #region MinecraftVersionLast
-        public int MinecraftVersionLastA { get; set; } = 1;
-        public int MinecraftVersionLastB { get; set; } = 0;
-        public int MinecraftVersionLastC { get; set; } = 0;
-        public TypeVersion MinecraftVersionLastType { get; set; } = TypeVersion.Alpha;
+        public int MinecraftVersionLastA
+        {
+            get => MinecraftVersion.Last.A;
+            set => MinecraftVersion.Last.A = value;
+        }
+        public int MinecraftVersionLastB
+        {
+            get => MinecraftVersion.Last.B;
+            set => MinecraftVersion.Last.B = value;
+        }
+        public int MinecraftVersionLastC
+        {
+            get => MinecraftVersion.Last.C;
+            set => MinecraftVersion.Last.C = value;
+        }
+        public TypeVersion MinecraftVersionLastType
+        {
+            get => MinecraftVersion.Last.Type;
+            set => MinecraftVersion.Last.Type = value;
+        }
         #endregion
 
         /// <summary>
@@ -68,59 +116,13 @@ namespace Model
         public MinecraftMod() { }
 
         /// <summary>
-        /// Set version in one line
-        /// </summary>
-        /// <param name="version">new version</param>
-        public void SetVersion(EntityVersion version)
-        {
-            VersionA = version.A;
-            VersionB = version.B;
-            VersionC = version.C;
-            VersionType = version.Type;
-        }
-        
-        /// <summary>
-        /// Get version in one line
-        /// </summary>
-        public EntityVersion GetVersion()
-        {
-            return new(VersionType, VersionA, VersionB, VersionC);
-        }
-
-        /// <summary>
-        /// Set minecraft version in one line
-        /// </summary>
-        /// <param name="version">new version</param>
-        public void SetMinecraftVersion(ModMinecraftVersion version)
-        {
-            MinecraftVersionFirstA = version.First.A;
-            MinecraftVersionFirstB = version.First.B;
-            MinecraftVersionFirstC = version.First.C;
-            MinecraftVersionFirstType = version.First.Type;
-            MinecraftVersionLastA = version.Last.A;
-            MinecraftVersionLastB = version.Last.B;
-            MinecraftVersionLastC = version.Last.C;
-            MinecraftVersionLastType = version.Last.Type;
-        }
-        
-        /// <summary>
-        /// Get minecraft version in one line
-        /// </summary>
-        public ModMinecraftVersion GetMinecraftVersion()
-        {
-            return new(new(MinecraftVersionFirstType, MinecraftVersionFirstA, MinecraftVersionFirstB, MinecraftVersionFirstC), new(MinecraftVersionLastType, MinecraftVersionLastA, MinecraftVersionLastB, MinecraftVersionLastC));
-        }
-
-        /// <summary>
         /// Get mod as string
         /// </summary>
         public override string ToString()
         {
             string prefix = Status == ModStatus.Banned ? "[BAN] " : "";
             string type = IsJavaMod ? "JAVA" : "BEDROCK";
-            string version = EntityVersion.ToString(VersionType, VersionA, VersionB, VersionC);
-            string minecraftVersion = ModMinecraftVersion.ToString(MinecraftVersionFirstType, MinecraftVersionFirstA, MinecraftVersionFirstB, MinecraftVersionFirstC, MinecraftVersionLastType, MinecraftVersionLastA, MinecraftVersionLastB, MinecraftVersionLastC);
-            return $"{prefix}{type} [{Id}] \"{Name}\" {version} by {Author} [{minecraftVersion}]";
+            return $"{prefix}{type} [{Id}] \"{Name}\" {Version} by {Author} [{MinecraftVersion}]";
         }
 
         /// <summary>
@@ -134,8 +136,8 @@ namespace Model
                 { "Name", Name },
                 { "Description", Description },
                 { "Author", Author },
-                { "Version", GetVersion() },
-                { "MinecraftVersion", GetMinecraftVersion() },
+                { "Version", Version },
+                { "MinecraftVersion", MinecraftVersion },
                 { "IsJavaMod", IsJavaMod },
                 { "Rank", Rank },
                 { "Tags", Tags.Split('\n') },
