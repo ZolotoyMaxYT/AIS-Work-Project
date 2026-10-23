@@ -3,7 +3,7 @@
 namespace DataAccessLayer
 {
     /// <summary>
-    /// Настройки базы SQLite для EF и Dapper.
+    /// Pref SQLite for EF and Dapper.
     /// </summary>
     public static class DBConnection
     {
@@ -11,12 +11,12 @@ namespace DataAccessLayer
         static bool ready = false;
 
         /// <summary>
-        /// Строка подключения к файлу %LOCALAPPDATA%\AIS\Mods\Minecraft.db.
+        /// Connection to %LOCALAPPDATA%\AIS\Mods\Minecraft.db.
         /// </summary>
         public static string str = "Data Source=" + Path.Combine(folder, "Minecraft.db");
 
         /// <summary>
-        /// Создает папку, файл базы и таблицу Records, если их еще нет.
+        /// Create table, if it's not exist
         /// </summary>
         public static void CreateTable()
         {
@@ -38,6 +38,11 @@ namespace DataAccessLayer
             ready = true;
         }
 
+        /// <summary>
+        /// SQL Version-type data for create table
+        /// </summary>
+        /// <param name="name">Name of Version field</param>
+        /// <returns>string of SQL code</returns>
         private static string GetVersionSQL(string name) => $"{name}A integer not null, {name}B integer not null, {name}C integer not null, {name}Type integer not null, ";
     }
 }

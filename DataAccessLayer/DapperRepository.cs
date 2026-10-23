@@ -6,7 +6,7 @@ using System.Data.SQLite;
 namespace DataAccessLayer
 {
     /// <summary>
-    /// Репозиторий записей через Dapper
+    /// Repository from через Dapper
     /// </summary>
     public class DapperRepository : IRepository<MinecraftMod>
     {
@@ -15,11 +15,6 @@ namespace DataAccessLayer
             DBConnection.CreateTable();
         }
 
-        /// <summary>
-        /// Добавляет новую запись в базу с уникальным ID.
-        /// <param name="entity">данные для записи</param>
-        /// <returns>true - если успешно, иначе - false</returns>
-        /// </summary>
         public bool Create(MinecraftMod entity)
         {
             if (entity == null || IsExist(entity.Id)) return false;
@@ -33,11 +28,6 @@ namespace DataAccessLayer
             return true;
         }
 
-        /// <summary>
-        /// Удаляет запись с указанным ID.
-        /// <param name="id">ID записи</param>
-        /// <returns>true - если успешно, иначе - false</returns>
-        /// </summary>
         public bool Delete(string id)
         {
             using (SQLiteConnection con = new SQLiteConnection(DBConnection.str))
@@ -46,11 +36,6 @@ namespace DataAccessLayer
             }
         }
 
-        /// <summary>
-        /// Проверить, существует ли запись с указанным ID.
-        /// </summary>
-        /// <param name="id">ID записи</param>
-        /// <returns>true - если существует, иначе - false</returns>
         public bool IsExist(string id)
         {
             using (SQLiteConnection con = new SQLiteConnection(DBConnection.str))
@@ -59,10 +44,6 @@ namespace DataAccessLayer
             }
         }
 
-        /// <summary>
-        /// Возвращает все записи.
-        /// <returns>Список всех записей</returns>
-        /// </summary>
         public MinecraftMod[] ReadAll()
         {
             using (SQLiteConnection con = new SQLiteConnection(DBConnection.str))
@@ -71,11 +52,6 @@ namespace DataAccessLayer
             }
         }
 
-        /// <summary>
-        /// Возвращает запись с указанным ID или null.
-        /// <param name="id">ID записи</param>
-        /// <returns>Найденная запись или null</returns>
-        /// </summary>
         public MinecraftMod? ReadByID(string id)
         {
             using (SQLiteConnection con = new SQLiteConnection(DBConnection.str))
@@ -84,11 +60,6 @@ namespace DataAccessLayer
             }
         }
 
-        /// <summary>
-        /// Сохраняет изменения записи.
-        /// <param name="entity">данные для записи</param>
-        /// <returns>true - если успешно, иначе - false</returns>
-        /// </summary>
         public bool Update(MinecraftMod entity)
         {
             if (entity == null) return false;
@@ -98,7 +69,17 @@ namespace DataAccessLayer
             }
         }
 
+        /// <summary>
+        /// SQL Version-type create data
+        /// </summary>
+        /// <param name="name">Name of Version field</param>
+        /// <returns>string of SQL code</returns>
         private string GetVersion(string name) => $"{name}A, {name}B, {name}C, {name}Type";
+        /// <summary>
+        /// SQL Version-type update data
+        /// </summary>
+        /// <param name="name">Name of Version field</param>
+        /// <returns>string of SQL code</returns>
         private string GetVersionUpdate(string name) => $"{name}A = @{name}A, {name}B = @{name}B, {name}C = @{name}C, {name}Type = @{name}Type";
     }
 }

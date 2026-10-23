@@ -4,7 +4,7 @@ using static Dapper.SqlMapper;
 namespace DataAccessLayer
 {
     /// <summary>
-    /// Репозиторий через Entity Framework.
+    /// Repository from Entity Framework.
     /// </summary>
     public class EntityRepository : IRepository<MinecraftMod>
     {
@@ -13,11 +13,6 @@ namespace DataAccessLayer
             DBConnection.CreateTable();
         }
 
-        /// <summary>
-        /// Добавляет новую запись в базу с уникальным ID.
-        /// <param name="entity">данные для записи</param>
-        /// <returns>true - если успешно, иначе - false</returns>
-        /// </summary>
         public bool Create(MinecraftMod entity)
         {
             if (entity == null || IsExist(entity.Id)) return false;
@@ -28,11 +23,6 @@ namespace DataAccessLayer
             }
         }
 
-        /// <summary>
-        /// Удаляет запись с указанным ID.
-        /// <param name="id">ID записи</param>
-        /// <returns>true - если успешно, иначе - false</returns>
-        /// </summary>
         public bool Delete(string id)
         {
             using (DataContext db = new())
@@ -44,11 +34,6 @@ namespace DataAccessLayer
             }
         }
 
-        /// <summary>
-        /// Проверить, существует ли запись с указанным ID.
-        /// </summary>
-        /// <param name="id">ID записи</param>
-        /// <returns>true - если существует, иначе - false</returns>
         public bool IsExist(string id)
         {
             using (DataContext db = new())
@@ -57,10 +42,6 @@ namespace DataAccessLayer
             }
         }
 
-        /// <summary>
-        /// Возвращает все записи.
-        /// <returns>Список всех записей</returns>
-        /// </summary>
         public MinecraftMod[] ReadAll()
         {
             using (DataContext db = new())
@@ -69,11 +50,6 @@ namespace DataAccessLayer
             }
         }
 
-        /// <summary>
-        /// Возвращает запись с указанным ID или null.
-        /// <param name="id">ID записи</param>
-        /// <returns>Найденная запись или null</returns>
-        /// </summary>
         public MinecraftMod? ReadByID(string id)
         {
             using (DataContext db = new())
@@ -82,11 +58,6 @@ namespace DataAccessLayer
             }
         }
 
-        /// <summary>
-        /// Сохраняет изменения записи.
-        /// <param name="entity">данные для записи</param>
-        /// <returns>true - если успешно, иначе - false</returns>
-        /// </summary>
         public bool Update(MinecraftMod entity)
         {
             if (entity == null) return false;
