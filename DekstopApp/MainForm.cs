@@ -1,5 +1,6 @@
-using Model;
 using BussinesLogic;
+using Model;
+using Ninject;
 
 namespace DekstopApp
 {
@@ -14,6 +15,8 @@ namespace DekstopApp
         public MainForm()
         {
             InitializeComponent();
+            NinjectKernel = new StandardKernel(new SimpleConfigModule());
+            ModDatabase = NinjectKernel.Get<ModDatabase>();
             MenuUpdate();
             SizeChanged += ModList_SizeChange;
             MinecraftVersionButton.Text = $"Minecraft version is {MinecraftVersion} (click to change)";
@@ -23,7 +26,7 @@ namespace DekstopApp
         {
             ModList.Controls.Clear();
             ModList.Controls.Add(hiddenLabel);
-            foreach (var item in Database.GetListOfIDMods())
+            foreach (var item in ModDatabase.GetListOfIDMods())
             {
                 var a = new ModListItem(this, item)
                 {
@@ -41,7 +44,8 @@ namespace DekstopApp
             MinecraftVersionButton.Text = $"Minecraft version is {MinecraftVersion} (click to change)";
         }
 
-        public ModDatabase Database = new();
+        public IKernel NinjectKernel;
+        public ModDatabase ModDatabase;
         public EntityVersion MinecraftVersion = new(TypeVersion.Release, 1, 7, 10);
 
         private void CreateButton_Click(object? sender, EventArgs e)

@@ -31,13 +31,6 @@ namespace DataAccessLayer
         public bool Delete(string id);
 
         /// <summary>
-        /// A record with ID is exist?
-        /// </summary>
-        /// <param name="id">ID</param>
-        /// <returns>true - if successful, else - false</returns>
-        public bool IsExist(string id);
-
-        /// <summary>
         /// Get array of all records
         /// </summary>
         /// <returns>all records</returns>

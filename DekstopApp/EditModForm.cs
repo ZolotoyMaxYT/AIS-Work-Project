@@ -14,7 +14,7 @@ namespace DekstopApp
             InitializeComponent();
             Mainform = mainform;
             Mod = mod;
-            Mainform.Database.Read(Mod, out var data);
+            Mainform.ModDatabase.Read(Mod, out var data);
             IDText.Text = (string)data["Id"];
             NameInput.Text = (string)data["Name"];
             AuthorInput.Text = (string)data["Author"];
@@ -35,7 +35,7 @@ namespace DekstopApp
                 MessageBox.Show(null, $"Incorrect mod version type \"{VersionTypeInput.Text}\"!", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            Mainform.Database.Update(Mod, NameInput.Text, DescriptionInput.Text.Replace(Environment.NewLine, "\n"), AuthorInput.Text,
+            Mainform.ModDatabase.Update(Mod, NameInput.Text, DescriptionInput.Text.Replace(Environment.NewLine, "\n"), AuthorInput.Text,
                 new((TypeVersion)VersionTypeInput.SelectedIndex, (int)VersionAInput.Value, (int)VersionBInput.Value, (int)VersionCInput.Value),
                 (int)RankInput.Value, TagsInput.Text.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).ToList());
             Close();

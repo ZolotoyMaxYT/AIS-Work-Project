@@ -9,10 +9,9 @@ namespace BussinesLogic
         #region Base
         private IRepository<MinecraftMod> Database;
 
-        public ModDatabase()
+        public ModDatabase(IRepository<MinecraftMod> database)
         {
-            //Database = new EntityRepository();
-            Database = new DapperRepository();
+            Database = database;
         }
 
         /// <summary>
@@ -58,7 +57,8 @@ namespace BussinesLogic
         /// <returns>true if mod is exist, false if not</returns>
         public bool IsExist(string id)
         {
-            return Database.IsExist(id);
+            if (Database is IRepositoryIsExist<MinecraftMod> database) return database.IsExist(id);
+            return Database.ReadByID(id) is not null;
         }
 
         /// <summary>

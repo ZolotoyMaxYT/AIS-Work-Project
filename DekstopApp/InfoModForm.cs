@@ -12,7 +12,7 @@ namespace DekstopApp
 
         private void FormUpdate()
         {
-            Mainform.Database.Read(Mod, out var mod);
+            Mainform.ModDatabase.Read(Mod, out var mod);
             TitleText.Text = $"[{mod["Id"]}] {mod["Name"]}";
             AuthorText.Text = (string)mod["Author"];
             RankText.Text = ((int)mod["Rank"]).ToString();
@@ -22,7 +22,7 @@ namespace DekstopApp
             DescriptionText.Text = ((string)mod["Description"]).Replace("\n", Environment.NewLine);
             TagsText.Text = string.Join(Environment.NewLine, (string[])mod["Tags"]);
 
-            Mainform.Database.CheckStatusMod(Mod, out ModStatus status);
+            Mainform.ModDatabase.CheckStatusMod(Mod, out ModStatus status);
             if (status == ModStatus.Banned)
             {
                 ChangeButton.Enabled = false;
@@ -52,8 +52,8 @@ namespace DekstopApp
 
         private void MinecraftVersionEdit_Click(object sender, EventArgs e)
         {
-            Mainform.Database.Read(Mod, out var mod);
-            var nnve = new ModMinecraftVersionEdit(Mainform.Database, Mod, (ModMinecraftVersion)mod["MinecraftVersion"]);
+            Mainform.ModDatabase.Read(Mod, out var mod);
+            var nnve = new ModMinecraftVersionEdit(Mainform.ModDatabase, Mod, (ModMinecraftVersion)mod["MinecraftVersion"]);
             nnve.ShowDialog();
             Mod = nnve.Mod;
             FormUpdate();

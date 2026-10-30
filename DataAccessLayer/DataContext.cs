@@ -4,6 +4,9 @@ using Model;
 
 namespace DataAccessLayer
 {
+    /// <summary>
+    /// Data context for Database of MinecraftMods
+    /// </summary>
     public class DataContext : DbContext
     {
         public DbSet<MinecraftMod> MinecraftMods { get; set; }

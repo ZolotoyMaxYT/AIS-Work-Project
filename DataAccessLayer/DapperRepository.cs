@@ -17,7 +17,7 @@ namespace DataAccessLayer
 
         public bool Create(MinecraftMod entity)
         {
-            if (entity == null || IsExist(entity.Id)) return false;
+            if (entity == null || ReadByID(entity.Id) is not null) return false;
 
             using (SQLiteConnection con = new SQLiteConnection(DBConnection.str))
             {
@@ -33,14 +33,6 @@ namespace DataAccessLayer
             using (SQLiteConnection con = new SQLiteConnection(DBConnection.str))
             {
                 return con.Execute("DELETE FROM Records WHERE Id = @Id", new { Id = id }) > 0;
-            }
-        }
-
-        public bool IsExist(string id)
-        {
-            using (SQLiteConnection con = new SQLiteConnection(DBConnection.str))
-            {
-                return con.QueryFirstOrDefault("SELECT * FROM Records WHERE Id = @Id", new { Id = id }) is not null;
             }
         }
 

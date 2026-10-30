@@ -1,12 +1,11 @@
 ﻿using Model;
-using static Dapper.SqlMapper;
 
 namespace DataAccessLayer
 {
     /// <summary>
     /// Repository from Entity Framework.
     /// </summary>
-    public class EntityRepository : IRepository<MinecraftMod>
+    public class EntityRepository : IRepository<MinecraftMod>, IRepositoryIsExist<MinecraftMod>
     {
         public EntityRepository()
         {
