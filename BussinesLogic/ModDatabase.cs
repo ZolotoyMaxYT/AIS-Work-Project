@@ -7,7 +7,7 @@ namespace BussinesLogic
     /// <summary>
     /// All logic for work with Minecraft mods database
     /// </summary>
-    public class ModDatabase : IBasicModDatabase, IModDatabaseCRUD, IModDatabaseLogic, IModDatabaseTagManager, IModDatabaseMinecraftVersionManager, IModDatabaseModListManager, IModDatabaseStringUtilities, IModDatabaseBanManager
+    public class ModDatabase : IModDatabase
     {
         #region Private
         private IRepository<MinecraftMod> Database;

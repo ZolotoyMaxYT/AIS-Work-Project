@@ -11,7 +11,7 @@ namespace BussinesLogic
     {
         public override void Load()
         {
-            Bind<IBasicModDatabase>().To<ModDatabase>().InSingletonScope();
+            Bind<IModDatabase>().To<ModDatabase>().InSingletonScope();
             Bind<IRepository<MinecraftMod>>().To<DapperRepository>().InSingletonScope();
             //Bind<IRepository<MinecraftMod>>().To<EntityRepository>().InSingletonScope();
         }

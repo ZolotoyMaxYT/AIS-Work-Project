@@ -7,7 +7,7 @@ namespace DekstopApp
     public partial class MainForm : Form
     {
         public IKernel NinjectKernel;
-        public IBasicModDatabase ModDatabase;
+        public IModDatabase ModDatabase;
         public EntityVersion MinecraftVersion = new(TypeVersion.Release, 1, 7, 10);
 
         private Label hiddenLabel = new()
@@ -30,7 +30,7 @@ namespace DekstopApp
         {
             ModList.Controls.Clear();
             ModList.Controls.Add(hiddenLabel);
-            foreach (var item in ((IModDatabaseModListManager)ModDatabase).GetListOfIDMods())
+            foreach (var item in ModDatabase.GetListOfIDMods())
             {
                 var a = new ModListItem(this, item)
                 {

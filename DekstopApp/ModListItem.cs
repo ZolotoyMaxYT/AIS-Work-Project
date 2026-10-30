@@ -13,11 +13,11 @@ namespace DekstopApp
             InitializeComponent();
             Mod = mod;
             Mainform = mainform;
-            ((IModDatabaseStringUtilities)Mainform.ModDatabase).GetStringMod(mod, out string result);
+            Mainform.ModDatabase.GetStringMod(mod, out string result);
             Title.Text = result;
-            ((IModDatabaseTagManager)Mainform.ModDatabase).GetAllTags(mod, out string[] tags);
+            Mainform.ModDatabase.GetAllTags(mod, out string[] tags);
             Tags.Text = String.Join(", ", tags);
-            ((IModDatabaseMinecraftVersionManager)Mainform.ModDatabase).IsCorrectForMinecraftVersion(mod, mainform.MinecraftVersion, out bool versionIsCorrect);
+            (Mainform.ModDatabase).IsCorrectForMinecraftVersion(mod, mainform.MinecraftVersion, out bool versionIsCorrect);
             if (versionIsCorrect)
             {
                 BackColor = SystemColors.ControlLightLight;
@@ -37,7 +37,7 @@ namespace DekstopApp
 
         private void DeleteButton_Click(object sender, EventArgs e)
         {
-            ((IModDatabaseCRUD)Mainform.ModDatabase).Delete(Mod);
+            Mainform.ModDatabase.Delete(Mod);
             Mainform.MenuUpdate();
         }
     }
