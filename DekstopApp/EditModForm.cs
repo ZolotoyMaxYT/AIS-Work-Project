@@ -14,7 +14,7 @@ namespace DekstopApp
             InitializeComponent();
             Mainform = mainform;
             Mod = mod;
-            Mainform.ModDatabase.Read(Mod, out var data);
+            ((IModDatabaseCRUD)Mainform.ModDatabase).Read(Mod, out var data);
             IDText.Text = (string)data["Id"];
             NameInput.Text = (string)data["Name"];
             AuthorInput.Text = (string)data["Author"];
@@ -25,7 +25,7 @@ namespace DekstopApp
             VersionTypeInput.SelectedIndex = (int)((EntityVersion)data["Version"]).Type;
             TypeText.Text = (bool)data["IsJavaMod"] ? "Java mod" : "Bedrock mod";
             RankInput.Value = (int)data["Rank"];
-            TagsInput.Text = String.Join(Environment.NewLine, (string[])data["Tags"]);
+            TagsInput.Text = string.Join(Environment.NewLine, (string[])data["Tags"]);
         }
 
         private void UpdateButton_Click(object sender, EventArgs e)
@@ -35,9 +35,16 @@ namespace DekstopApp
                 MessageBox.Show(null, $"Incorrect mod version type \"{VersionTypeInput.Text}\"!", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            Mainform.ModDatabase.Update(Mod, NameInput.Text, DescriptionInput.Text.Replace(Environment.NewLine, "\n"), AuthorInput.Text,
+            ((IModDatabaseCRUD)Mainform.ModDatabase).Update(
+                Mod, 
+                NameInput.Text, 
+                DescriptionInput.Text.Replace(Environment.NewLine, "\n"), 
+                AuthorInput.Text,
                 new((TypeVersion)VersionTypeInput.SelectedIndex, (int)VersionAInput.Value, (int)VersionBInput.Value, (int)VersionCInput.Value),
-                (int)RankInput.Value, TagsInput.Text.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).ToList());
+                (int)RankInput.Value, 
+                TagsInput.Text.Split(Environment.NewLine, 
+                StringSplitOptions.RemoveEmptyEntries).ToList()
+            );
             Close();
         }
     }

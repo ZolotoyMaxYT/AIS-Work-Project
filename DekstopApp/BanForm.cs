@@ -23,15 +23,15 @@ namespace DekstopApp
         private void InputUpdate()
         {
             IdInput.Items.Clear();
-            string[] mods = Mainform.ModDatabase.GetFullListOfIDMods();
+            string[] mods = ((IModDatabaseModListManager)Mainform.ModDatabase).GetFullListOfIDMods();
             List<string> ids = new();
 
             for (int i = 0; i < mods.Length; i++)
             {
-                Mainform.ModDatabase.CheckStatusMod(mods[i], out ModStatus status);
+                ((IModDatabaseBanManager)Mainform.ModDatabase).CheckStatusMod(mods[i], out ModStatus status);
                 if (status == NewModStatus) continue;
                 ids.Add(mods[i]);
-                Mainform.ModDatabase.GetStringMod(mods[i], out string result);
+                ((IModDatabaseStringUtilities)Mainform.ModDatabase).GetStringMod(mods[i], out string result);
                 IdInput.Items.Add(result);
             }
 
@@ -44,10 +44,10 @@ namespace DekstopApp
             switch (NewModStatus)
             {
                 case ModStatus.Banned:
-                    Mainform.ModDatabase.BanMod(Mods[IdInput.SelectedIndex]);
+                    ((IModDatabaseBanManager)Mainform.ModDatabase).BanMod(Mods[IdInput.SelectedIndex]);
                     break;
                 case ModStatus.ShadowBanned:
-                    Mainform.ModDatabase.ShadowBan(Mods[IdInput.SelectedIndex]);
+                    ((IModDatabaseBanManager)Mainform.ModDatabase).ShadowBan(Mods[IdInput.SelectedIndex]);
                     break;
             }
             Mainform.MenuUpdate();

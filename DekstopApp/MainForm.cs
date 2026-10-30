@@ -6,6 +6,10 @@ namespace DekstopApp
 {
     public partial class MainForm : Form
     {
+        public IKernel NinjectKernel;
+        public IBasicModDatabase ModDatabase;
+        public EntityVersion MinecraftVersion = new(TypeVersion.Release, 1, 7, 10);
+
         private Label hiddenLabel = new()
         {
             AutoSize = false,
@@ -26,7 +30,7 @@ namespace DekstopApp
         {
             ModList.Controls.Clear();
             ModList.Controls.Add(hiddenLabel);
-            foreach (var item in ModDatabase.GetListOfIDMods())
+            foreach (var item in ((IModDatabaseModListManager)ModDatabase).GetListOfIDMods())
             {
                 var a = new ModListItem(this, item)
                 {
@@ -43,10 +47,6 @@ namespace DekstopApp
             MenuUpdate();
             MinecraftVersionButton.Text = $"Minecraft version is {MinecraftVersion} (click to change)";
         }
-
-        public IKernel NinjectKernel;
-        public ModDatabase ModDatabase;
-        public EntityVersion MinecraftVersion = new(TypeVersion.Release, 1, 7, 10);
 
         private void CreateButton_Click(object? sender, EventArgs e)
         {

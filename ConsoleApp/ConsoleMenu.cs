@@ -1,11 +1,25 @@
 ﻿namespace ConsoleApp
 {
-
+    /// <summary>
+    /// Console menu for console project
+    /// </summary>
     public class ConsoleMenu
     {
+        /// <summary>
+        /// Array of options
+        /// </summary>
         public ConsoleMenuOption[] Options;
+        /// <summary>
+        /// Index of selected option
+        /// </summary>
         public int Index = 0;
+        /// <summary>
+        /// Event calling every time on start in Print()
+        /// </summary>
         public ConsoleMenuAction? OnStartPrint = null;
+        /// <summary>
+        /// Event calling every time on end in Print()
+        /// </summary>
         public ConsoleMenuAction? OnEndPrint = null;
 
         public ConsoleMenu(params ConsoleMenuOption[] options)
@@ -16,11 +30,9 @@
         /// <summary>
         /// Update selected index of menu
         /// </summary>
-        /// <param name="index"></param>
         /// <returns>true if index is changed, else false</returns>
-        private bool UpdateIndex(out int index)
+        private bool UpdateIndex()
         {
-            index = Index;
             while (true)
             {
                 var key = Console.ReadKey();
@@ -76,7 +88,7 @@
         /// </summary>
         public void Update()
         {
-            if (UpdateIndex(out int index))
+            if (UpdateIndex())
             {
                 Console.Clear();
                 Print();

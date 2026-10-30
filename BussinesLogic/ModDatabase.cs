@@ -3,10 +3,13 @@ using Model;
 
 namespace BussinesLogic
 {
-    
-    public class ModDatabase
+
+    /// <summary>
+    /// All logic for work with Minecraft mods database
+    /// </summary>
+    public class ModDatabase : IBasicModDatabase, IModDatabaseCRUD, IModDatabaseLogic, IModDatabaseTagManager, IModDatabaseMinecraftVersionManager, IModDatabaseModListManager, IModDatabaseStringUtilities, IModDatabaseBanManager
     {
-        #region Base
+        #region Private
         private IRepository<MinecraftMod> Database;
 
         public ModDatabase(IRepository<MinecraftMod> database)
@@ -37,98 +40,21 @@ namespace BussinesLogic
             return IsNotExistResult.Successful;
         }
 
-        /// <summary>
-        /// ID is correct for this DataBase?
-        /// </summary>
-        /// <param name="id">id</param>
-        /// <returns>true if ID is correct</returns>
-        public bool IsCorrectID(string id)
-        {
-            return !id.IsWhiteSpace();
-        }
-        #endregion // Base
+        #endregion // Private
 
-        #region DatabaseWork
-
-        /// <summary>
-        /// Is mod exist?
-        /// </summary>
-        /// <param name="id">id of mod</param>
-        /// <returns>true if mod is exist, false if not</returns>
-        public bool IsExist(string id)
-        {
-            if (Database is IRepositoryIsExist<MinecraftMod> database) return database.IsExist(id);
-            return Database.ReadByID(id) is not null;
-        }
-
-        /// <summary>
-        /// Get list of mods' id (with shadow banned mod)
-        /// </summary>
-        /// <returns>list of mods' id</returns>
-        public string[] GetFullListOfIDMods()
-        {
-            return (from mod in Database.ReadAll() select mod.Id).ToArray();
-        }
-
-        /// <summary>
-        /// Get list of mods' id (not shadow banned mod)
-        /// </summary>
-        /// <returns>list of mods' id</returns>
-        public string[] GetListOfIDMods()
-        {
-            return (from mod in Database.ReadAll() where mod.Status != ModStatus.ShadowBanned select mod.Id).ToArray();
-        }
-
-        /// <summary>
-        /// Check status of mod (Active/Ban/Shadow ban)
-        /// </summary>
-        /// <param name="id">ID of mod</param>
-        /// <param name="status">Status of mod <see cref="ModStatus"/></param>
-        /// <returns>Status of work <see cref="IsNotExistResult"/></returns>
-        public IsNotExistResult CheckStatusMod(string id, out ModStatus status)
-        {
-            status = ModStatus.Active;
-            var res = GetMod(id, out MinecraftMod mod);
-            if (res == IsNotExistResult.Successful) status = mod.Status;
-            return res;
-        }
-
-        /// <summary>
-        /// Create new mod in database
-        /// </summary>
-        /// <param name="id">id of mod</param>
-        /// <param name="name">Name of mod</param>
-        /// <param name="description">Description of mod</param>
-        /// <param name="author">Author of mod</param>
-        /// <param name="version">Version of mod</param>
-        /// <param name="minecraftVersion">Range of Minecraft's versions</param>
-        /// <param name="isJavaMod">is java mod? else bedrock mod</param>
-        /// <param name="rank">Rank of mod</param>
-        /// <param name="tags">List of mod's tags</param>
-        /// <returns>Status of work <see cref="IsExistResult"/></returns>
+        #region IModDatabase
         public IsExistResult Create(string id, string name, string description, string author, EntityVersion version, ModMinecraftVersion minecraftVersion, bool isJavaMod, int rank, List<string> tags)
         {
             if (!IsCorrectID(id)) return IsExistResult.NotID;
             return Database.Create(new MinecraftMod(id, name, description, author, version, minecraftVersion, isJavaMod, rank, tags, ModStatus.Active)) ? IsExistResult.Successful : IsExistResult.IsExist;
         }
 
-        /// <summary>
-        /// Delete mod from database
-        /// </summary>
-        /// <param name="id">id of mod</param>
-        /// <returns>Status of work <see cref="IsNotExistResult"/></returns>
         public IsNotExistResult Delete(string id)
         {
             if (!IsCorrectID(id)) return IsNotExistResult.NotID;
             return Database.Delete(id) ? IsNotExistResult.Successful : IsNotExistResult.IsNotExist;
         }
 
-        /// <summary>
-        /// Read mod from database
-        /// </summary>
-        /// <param name="id">id of mod</param>
-        /// <param name="mod">const JSON object of mod</param>
-        /// <returns>Status of work <see cref="IsNotExistResult"/></returns>
         public IsNotExistResult Read(string id, out Dictionary<string, object> mod)
         {
             mod = null;
@@ -139,17 +65,6 @@ namespace BussinesLogic
             return IsNotExistResult.Successful;
         }
 
-        /// <summary>
-        /// Update mod from database
-        /// </summary>
-        /// <param name="id">id of mod</param>
-        /// <param name="name">Name of mod</param>
-        /// <param name="description">Description of mod</param>
-        /// <param name="author">Author of mod</param>
-        /// <param name="version">Version of mod</param>
-        /// <param name="rank">Rank of mod</param>
-        /// <param name="tags">List of mod's tags</param>
-        /// <returns>Status of work <see cref="IsNotExistResult"/></returns>
         public IsNotExistResult Update(string id, string? name = null, string? description = null, string? author = null, EntityVersion? version = null, int? rank = null, List<string>? tags = null)
         {
             if (!IsCorrectID(id)) return IsNotExistResult.NotID;
@@ -167,13 +82,22 @@ namespace BussinesLogic
             return IsNotExistResult.IsNotExist;
         }
 
-        /// <summary>
-        /// Mod has this tag?
-        /// </summary>
-        /// <param name="id">id of mod</param>
-        /// <param name="tag">tag</param>
-        /// <param name="result">has tag?</param>
-        /// <returns>Status of work <see cref="IsNotExistResult"/></returns>
+        #endregion // IModDatabase
+
+        #region IModDatabaseLogic
+        public bool IsExist(string id)
+        {
+            if (Database is IRepositoryIsExist<MinecraftMod> database) return database.IsExist(id);
+            return Database.ReadByID(id) is not null;
+        }
+        public bool IsCorrectID(string id)
+        {
+            return !id.IsWhiteSpace();
+        }
+
+        #endregion // IModDatabaseLogic
+
+        #region IModDatabaseTagManager
         public IsNotExistResult HasTag(string id, string tag, out bool result)
         {
             result = false;
@@ -187,12 +111,6 @@ namespace BussinesLogic
             return IsNotExistResult.IsNotExist;
         }
 
-        /// <summary>
-        /// Add new tag to mod
-        /// </summary>
-        /// <param name="id">id of mod</param>
-        /// <param name="tag">new tag</param>
-        /// <returns>Status of work <see cref="HasTagResult"/></returns>
         public HasTagResult AddTag(string id, string tag)
         {
             if (!IsCorrectID(id)) return HasTagResult.NotID;
@@ -208,12 +126,6 @@ namespace BussinesLogic
             return HasTagResult.IsNotExist;
         }
 
-        /// <summary>
-        /// Remove tag from mod
-        /// </summary>
-        /// <param name="id">id of mod</param>
-        /// <param name="tag">old tag</param>
-        /// <returns>Status of work <see cref=" HasNotTagResult"/></returns>
         public HasNotTagResult RemoveTag(string id, string tag)
         {
             if (!IsCorrectID(id)) return HasNotTagResult.NotID;
@@ -231,12 +143,6 @@ namespace BussinesLogic
             return HasNotTagResult.IsNotExist;
         }
 
-        /// <summary>
-        /// Get list of mods with this tag
-        /// </summary>
-        /// <param name="tag">tag</param>
-        /// <param name="mods">result list of mods</param>
-        /// <returns>Status of work <see cref="IsNotExistResult"/></returns>
         public IsNotExistResult GetAllModsWithTag(string tag, out string[] mods)
         {
             mods = (from mod in GetListOfMods() where mod.Status != ModStatus.ShadowBanned && mod.Tags.Split('\n').Contains(tag) select mod.Id).ToArray();
@@ -244,12 +150,6 @@ namespace BussinesLogic
             return IsNotExistResult.Successful;
         }
 
-        /// <summary>
-        /// Get all tags of mod
-        /// </summary>
-        /// <param name="id">id of mod</param>
-        /// <param name="result">result list of tags</param>
-        /// <returns>Status of work <see cref="IsNotExistResult"/></returns>
         public IsNotExistResult GetAllTags(string id, out string[] result)
         {
             result = [];
@@ -261,32 +161,9 @@ namespace BussinesLogic
             }
             return IsNotExistResult.IsNotExist;
         }
+        #endregion // IModDatabaseTagManager
 
-        /// <summary>
-        /// Get mod as string
-        /// </summary>
-        /// <param name="id">id of mod</param>
-        /// <param name="result">result mod info as string</param>
-        /// <returns>Status of work <see cref="IsNotExistResult"/></returns>
-        public IsNotExistResult GetStringMod(string id, out string result)
-        {
-            result = "EMPTY";
-            if (!IsCorrectID(id)) return IsNotExistResult.NotID;
-            if (GetMod(id, out MinecraftMod mod) == IsNotExistResult.Successful)
-            {
-                result = mod.ToString();
-                return IsNotExistResult.Successful;
-            }
-            return IsNotExistResult.IsNotExist;
-        }
-
-        /// <summary>
-        /// Checks whether this mod is compatible with the current version of Minecraft. 
-        /// </summary>
-        /// <param name="id">id of mod</param>
-        /// <param name="version">version of minecraft</param>
-        /// <param name="result">result. Mod is compatible?</param>
-        /// <returns>Status of work <see cref="IsNotExistResult"/></returns>
+        #region IModDatabaseMinecraftVersionManager
         public IsNotExistResult IsCorrectForMinecraftVersion(string id, EntityVersion version, out bool result)
         {
             result = false;
@@ -299,13 +176,6 @@ namespace BussinesLogic
             return IsNotExistResult.IsNotExist;
         }
 
-        /// <summary>
-        /// Change the mod's Minecraft version to a more up‑to‑date one. And update id style for new versions
-        /// </summary>
-        /// <param name="id">id of mod</param>
-        /// <param name="version">Range of new minecraft's versions </param>
-        /// <param name="newId">The new mod ID (or the old one, if it hasn’t changed)</param>
-        /// <returns>Status of work <see cref="IsNotCorrectVersionResult"/></returns>
         public IsNotCorrectVersionResult ChangeMinecraftVersionForMod(string id, ModMinecraftVersion version, out string newId)
         {
             newId = id;
@@ -335,12 +205,43 @@ namespace BussinesLogic
             }
             return IsNotCorrectVersionResult.IsNotExist;
         }
+        #endregion // IModDatabaseMinecraftVersionManager
 
-        /// <summary>
-        /// Ban mod. Update description and tags.
-        /// </summary>
-        /// <param name="id">id of mod</param>
-        /// <returns>Status of work <see cref="IsBanResult"/></returns>
+        #region IModDatabaseModListManager
+        public string[] GetFullListOfIDMods()
+        {
+            return (from mod in Database.ReadAll() select mod.Id).ToArray();
+        }
+
+        public string[] GetListOfIDMods()
+        {
+            return (from mod in Database.ReadAll() where mod.Status != ModStatus.ShadowBanned select mod.Id).ToArray();
+        }
+        #endregion // IModDatabaseModListManager
+
+        #region IModDatabaseStringUtilities
+        public IsNotExistResult GetStringMod(string id, out string result)
+        {
+            result = "EMPTY";
+            if (!IsCorrectID(id)) return IsNotExistResult.NotID;
+            if (GetMod(id, out MinecraftMod mod) == IsNotExistResult.Successful)
+            {
+                result = mod.ToString();
+                return IsNotExistResult.Successful;
+            }
+            return IsNotExistResult.IsNotExist;
+        }
+        #endregion // IModDatabaseStringUtilities
+
+        #region IModDatabaseBanManager
+        public IsNotExistResult CheckStatusMod(string id, out ModStatus status)
+        {
+            status = ModStatus.Active;
+            var res = GetMod(id, out MinecraftMod mod);
+            if (res == IsNotExistResult.Successful) status = mod.Status;
+            return res;
+        }
+
         public IsBanResult BanMod(string id)
         {
             if (!IsCorrectID(id)) return IsBanResult.NotID;
@@ -356,11 +257,6 @@ namespace BussinesLogic
             return IsBanResult.IsNotExist;
         }
 
-        /// <summary>
-        /// Shadow ban mod.
-        /// </summary>
-        /// <param name="id">id of mod</param>
-        /// <returns>Status of work <see cref="IsBanResult"/></returns>
         public IsBanResult ShadowBan(string id)
         {
             if (!IsCorrectID(id)) return IsBanResult.NotID;
@@ -373,7 +269,7 @@ namespace BussinesLogic
             }
             return IsBanResult.IsNotExist;
         }
-        #endregion // DatabaseWork
+        #endregion // IModDatabaseBanManager
     }
 }
 

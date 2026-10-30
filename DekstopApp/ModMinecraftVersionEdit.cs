@@ -5,10 +5,10 @@ namespace DekstopApp
 {
     public partial class ModMinecraftVersionEdit : Form
     {
-        ModDatabase Database;
+        IModDatabaseMinecraftVersionManager Database;
         public string Mod { get; private set; }
         ModMinecraftVersion Version;
-        public ModMinecraftVersionEdit(ModDatabase db, string mod, ModMinecraftVersion version)
+        public ModMinecraftVersionEdit(IModDatabaseMinecraftVersionManager db, string mod, ModMinecraftVersion version)
         {
             InitializeComponent();
             Database = db;

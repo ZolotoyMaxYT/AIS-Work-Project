@@ -57,7 +57,7 @@ namespace ConsoleApp
             Print((string[])mod["Tags"]);
             Console.WriteLine($"+---------------------");
         }
-        public static void PrintMods(ModDatabase db, string[] mods, EntityVersion minecraftVersion)
+        public static void PrintMods(IBasicModDatabase db, string[] mods, EntityVersion minecraftVersion)
         {
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("---[ LIST OF MODS ]---");
@@ -69,9 +69,9 @@ namespace ConsoleApp
             {
                 for (int i = 0; i < mods.Length; i++)
                 {
-                    if (db.GetStringMod(mods[i], out string result) == IsNotExistResult.Successful)
+                    if (((IModDatabaseStringUtilities)db).GetStringMod(mods[i], out string result) == IsNotExistResult.Successful)
                     {
-                        db.IsCorrectForMinecraftVersion(mods[i], minecraftVersion, out bool res);
+                        ((IModDatabaseMinecraftVersionManager)db).IsCorrectForMinecraftVersion(mods[i], minecraftVersion, out bool res);
                         if (res) Console.ForegroundColor = ConsoleColor.White;
                         else Console.ForegroundColor = ConsoleColor.DarkGray;
                         Console.WriteLine($" * {result}");

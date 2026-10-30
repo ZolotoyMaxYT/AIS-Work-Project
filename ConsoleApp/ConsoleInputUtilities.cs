@@ -132,7 +132,7 @@ namespace ConsoleApp
             ConsoleLogger.Error("Incorrect data!\n * 1.0.0r, 1.0.0release -> v1.0.0 (release)\n * 1.0.0a, 1.0.0alpha -> v1.0.0 (alpha)\n * 1.0.0b, 1.0.0beta -> v1.0.0 (beta)\n");
             return InputVersionOrNull();
         }
-        public static string InputExistIDOrEmptyString(ModDatabase db)
+        public static string InputExistIDOrEmptyString(IModDatabaseLogic db)
         {
             Console.WriteLine(" ---[ (string) ID or empty string ]---");
             string id;
