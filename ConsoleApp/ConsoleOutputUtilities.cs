@@ -1,4 +1,5 @@
 ﻿using BussinesLogic;
+using BussinesLogic.Interfaces;
 using Model;
 
 namespace ConsoleApp

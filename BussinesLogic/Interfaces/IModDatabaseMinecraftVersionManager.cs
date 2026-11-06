@@ -4,13 +4,18 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Text;
 
-namespace BussinesLogic
+namespace BussinesLogic.Interfaces
 {
     /// <summary>
     /// Interface for all basic MinecraftVersion logic of ModDatabase
     /// </summary>
     public interface IModDatabaseMinecraftVersionManager : IBasicModDatabase
     {
+        /// <summary>
+        /// Basic functions for ModDatabase
+        /// </summary>
+        public IBasicModDatabase BasicModDatabase { get; }
+
         /// <summary>
         /// Checks whether this mod is compatible with the current version of Minecraft. 
         /// </summary>

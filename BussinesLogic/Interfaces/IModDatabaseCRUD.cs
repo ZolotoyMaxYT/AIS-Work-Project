@@ -2,13 +2,18 @@
 using Model;
 using System.Data.Entity;
 
-namespace BussinesLogic
+namespace BussinesLogic.Interfaces
 {
     /// <summary>
     /// Interface for all basic CRUD logic of ModDatabase
     /// </summary>
-    public interface IModDatabaseCRUD : IBasicModDatabase
+    public interface IModDatabaseCRUDManager : IBasicModDatabase
     {
+        /// <summary>
+        /// Basic functions for ModDatabase
+        /// </summary>
+        public IBasicModDatabase BasicModDatabase { get; }
+
         /// <summary>
         /// Create new mod in database
         /// </summary>
@@ -52,6 +57,5 @@ namespace BussinesLogic
         /// <param name="tags">List of mod's tags</param>
         /// <returns>Status of work <see cref="IsNotExistResult"/></returns>
         public IsNotExistResult Update(string id, string? name = null, string? description = null, string? author = null, EntityVersion? version = null, int? rank = null, List<string>? tags = null);
-
     }
 }

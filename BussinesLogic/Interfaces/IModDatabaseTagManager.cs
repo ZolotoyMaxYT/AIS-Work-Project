@@ -4,13 +4,18 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Text;
 
-namespace BussinesLogic
+namespace BussinesLogic.Interfaces
 {
     /// <summary>
     /// Interface for all basic tag logic of ModDatabase
     /// </summary>
     public interface IModDatabaseTagManager : IBasicModDatabase
     {
+        /// <summary>
+        /// Basic functions for ModDatabase
+        /// </summary>
+        public IBasicModDatabase BasicModDatabase { get; }
+
         /// <summary>
         /// Mod has this tag?
         /// </summary>

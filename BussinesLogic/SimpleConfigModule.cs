@@ -1,4 +1,6 @@
-﻿using DataAccessLayer;
+﻿using BussinesLogic.Classes;
+using BussinesLogic.Interfaces;
+using DataAccessLayer;
 using Model;
 using Ninject.Modules;
 
@@ -11,9 +13,18 @@ namespace BussinesLogic
     {
         public override void Load()
         {
-            Bind<IModDatabase>().To<ModDatabase>().InSingletonScope();
+            // Repository bind
             Bind<IRepository<MinecraftMod>>().To<DapperRepository>().InSingletonScope();
             //Bind<IRepository<MinecraftMod>>().To<EntityRepository>().InSingletonScope();
+
+            // ModDatabase bind
+            Bind<IBasicModDatabase>().To<BasicModDatabase>().InSingletonScope();
+            Bind<IModDatabaseBanManager>().To<ModDatabaseBanManager>().InSingletonScope();
+            Bind<IModDatabaseCRUDManager>().To<ModDatabaseCRUDManager>().InSingletonScope();
+            Bind<IModDatabaseMinecraftVersionManager>().To<ModDatabaseMinecraftVersionManager>().InSingletonScope();
+            Bind<IModDatabaseModListManager>().To<ModDatabaseModListManager>().InSingletonScope();
+            Bind<IModDatabaseTagManager>().To<ModDatabaseTagManager>().InSingletonScope();
+            Bind<IModDatabase>().To<ModDatabase>().InSingletonScope();
         }
     }
 }

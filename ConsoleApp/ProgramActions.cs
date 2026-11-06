@@ -1,4 +1,7 @@
 ﻿using BussinesLogic;
+using BussinesLogic.Classes;
+using BussinesLogic.Interfaces;
+using DataAccessLayer;
 using Model;
 using Ninject;
 using System.Data.Entity;
@@ -23,7 +26,7 @@ namespace ConsoleApp
         );
         public static EntityVersion MinecraftVersion = new(TypeVersion.Release, 1, 7, 10);
         public static IKernel NinjectKernel = new StandardKernel(new SimpleConfigModule());
-        public static IModDatabase ModDatabase = NinjectKernel.Get<ModDatabase>();
+        public static IModDatabase ModDatabase = NinjectKernel.Get<IModDatabase>();
 
         public static void MainLoop()
         {
@@ -340,7 +343,7 @@ namespace ConsoleApp
         }
         public static void BanMod()
         {
-            ConsoleOutputUtilities.PrintMods(ModDatabase, ModDatabase.GetListOfIDMods(), MinecraftVersion);
+            ConsoleOutputUtilities.PrintMods(ModDatabase, ModDatabase.GetFullListOfIDMods(), MinecraftVersion);
             Console.WriteLine();
             string id = ConsoleInputUtilities.InputExistIDOrEmptyString(ModDatabase);
             if (id != "")
@@ -361,7 +364,7 @@ namespace ConsoleApp
         }
         public static void ShadowBanMod()
         {
-            ConsoleOutputUtilities.PrintMods(ModDatabase, ModDatabase.GetListOfIDMods(), MinecraftVersion);
+            ConsoleOutputUtilities.PrintMods(ModDatabase, ModDatabase.GetFullListOfIDMods(), MinecraftVersion);
             Console.WriteLine();
             string id = ConsoleInputUtilities.InputExistIDOrEmptyString(ModDatabase);
             if (id != "")

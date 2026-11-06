@@ -1,16 +1,19 @@
-﻿using Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Text;
 
-namespace BussinesLogic
+namespace BussinesLogic.Interfaces
 {
     /// <summary>
-    /// Interface for all basic MinecraftModList logic of ModDatabase
+    /// Interface for all basic ModList logic of ModDatabase
     /// </summary>
     public interface IModDatabaseModListManager : IBasicModDatabase
     {
+        /// <summary>
+        /// Basic functions for ModDatabase
+        /// </summary>
+        public IBasicModDatabase BasicModDatabase { get; }
+
         /// <summary>
         /// Get list of mods' id (with shadow banned mod)
         /// </summary>
